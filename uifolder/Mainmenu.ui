@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CustomerMainMenu</class>
+ <widget class="QWidget" name="CustomerMainMenu">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>703</width>
+    <height>554</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget#CustomerMainMenu{
+	background-color: rgb(39, 44, 54);
+}
+
+QFrame#frame{
+	margin: 60px;
+	border-radius: 20px;
+	background-color: rgba(225, 228, 221, 120);
+}
+
+QLineEdit{
+	min-height: 45px;
+	border-radius: 20px;
+	background-color: #FFFFFF;
+	padding-left: 20px;
+	color: rgb(140, 140, 140);
+}
+
+QLineEdit:hover{
+	border: 2px solid rgb(139, 142, 139);
+}
+
+QPushButton{
+	min-height: 45px;
+	border-radius: 20px;
+	background-color: rgb(44, 66, 81);
+	color: #FFFFFF;
+}
+
+QPushButton:hover{
+	border: 2px solid rgb(255, 255, 255);
+}
+
+QCheckBox{
+	font-size: 10px;
+	color: #FFFFFF;
+}
+
+QLabel{
+	color: rgb(95, 94, 108);
+}
+
+
+</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QFrame" name="frame">
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QFrame#frame{
+	margin: 60px;
+	border-radius: 20px;
+	background-color: rgba(225, 228, 221, 120);
+}
+
+QLineEdit{
+	min-height: 45px;
+	border-radius: 20px;
+	background-color: #FFFFFF;
+	padding-left: 20px;
+	color: rgb(140, 140, 140);
+}
+
+QLineEdit:hover{
+	border: 2px solid rgb(139, 142, 139);
+}
+
+QPushButton{
+	min-height: 45px;
+	border-radius: 20px;
+	background-color: rgb(44, 66, 81);
+	color: #FFFFFF;
+}
+
+QPushButton:hover{
+	border: 2px solid rgb(255, 255, 255);
+}
+
+QCheckBox{
+	font-size: 10px;
+	color: #FFFFFF;
+}
+
+QLabel{
+	color: rgb(95, 94, 108);
+}
+
+
+</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt;&quot;&gt;Ana Menü&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="button1">
+        <property name="text">
+         <string>Rezervasyon Yap</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="button2">
+        <property name="text">
+         <string>Sipariş Ver</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="button3">
+        <property name="text">
+         <string>Geçmişi Görüntüle</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="button4">
+        <property name="maximumSize">
+         <size>
+          <width>400</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Çıkış</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

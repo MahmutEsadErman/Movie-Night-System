@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>636</width>
+    <height>517</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0">
+    <widget class="QFrame" name="frame">
+     <property name="layoutDirection">
+      <enum>Qt::LayoutDirection::LeftToRight</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QFrame#frame{
+	margin: 60px;
+	border-radius: 20px;
+	background-color: rgba(225, 228, 221, 120);
+}
+
+QLineEdit{
+	min-height: 45px;
+	border-radius: 20px;
+	background-color: #FFFFFF;
+	padding-left: 20px;
+	color: rgb(140, 140, 140);
+}
+
+QLineEdit:hover{
+	border: 2px solid rgb(139, 142, 139);
+}
+
+QPushButton{
+	min-height: 45px;
+	border-radius: 20px;
+	background-color: rgb(44, 66, 81);
+	color: #FFFFFF;
+}
+
+QPushButton:hover{
+	border: 2px solid rgb(255, 255, 255);
+}
+
+QCheckBox{
+	font-size: 10px;
+	color: #FFFFFF;
+}
+
+QLabel{
+	color: rgb(95, 94, 108);
+}
+
+
+</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Shape::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt;&quot;&gt;Ödeme Ekranı&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="placeholderText">
+         <string>Kart No</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit_4">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="placeholderText">
+         <string>İsim Soyisim</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QLineEdit" name="lineEdit_2">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="placeholderText">
+           <string>Cvv</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="lineEdit_3">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="placeholderText">
+           <string>Son Kullanma Tarihi</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="exit_button">
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Geri Dön</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="odeme_butonu">
+          <property name="text">
+           <string>Ödemeyi Yap</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

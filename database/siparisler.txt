@@ -1,0 +1,10 @@
+a,2024-05-12,21:40,Büryan-Çorba,80,Büryan güzeldi
+a,2024-05-12,21:41,Kebap,85,kebap güzeldi
+a,2024-05-12,21:51,Çorba-Kebap,135,merhaba
+a,2024-05-12,21:50,Kebap-İskender-Köfte,150,Keşke Büryan alsaydım
+e,2024-05-12,16:49,ayva,40,x
+e,2024-05-13,06:10,Köfte,15,Büryan çok iyiymiş çok beğendim
+e,2024-05-13,02:20,Köfte,50,x
+e,2024-05-13,04:40,Çorba,20,açık ayran olsaydı içerdik
+e,2024-05-13,00:20,Tavuk Şiş-Köfte,35,x
+b,2024-05-14,09:37,Büryan-Ayran,205,çok güzeldi
