@@ -55,14 +55,14 @@ QLineEdit:hover{
 	border: 2px solid rgb(139, 142, 139);
 }
 
-QPushButton#login_button{
+QPushButton#login_btn{
 	min-height: 45px;
 	border-radius: 20px;
 	background-color: rgb(140, 140, 140);
 	color: #FFFFFF;
 }
 
-QPushButton#login_button:hover{
+QPushButton#login_btn:hover{
 	border: 2px solid rgb(255, 255, 255);
 }
 
@@ -112,10 +112,10 @@ QPushButton#minimize_button{
        <string notr="true"/>
       </property>
       <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
+       <enum>QFrame::Shape::NoFrame</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
@@ -145,12 +145,12 @@ QPushButton#minimize_button{
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt;&quot;&gt;Log In&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignCenter</set>
+          <set>Qt::AlignmentFlag::AlignCenter</set>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit">
+        <widget class="QLineEdit" name="email_le">
          <property name="text">
           <string/>
          </property>
@@ -160,9 +160,9 @@ QPushButton#minimize_button{
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_2">
+        <widget class="QLineEdit" name="password_le">
          <property name="echoMode">
-          <enum>QLineEdit::Password</enum>
+          <enum>QLineEdit::EchoMode::Password</enum>
          </property>
          <property name="placeholderText">
           <string>Password</string>
@@ -170,7 +170,7 @@ QPushButton#minimize_button{
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="login_button">
+        <widget class="QPushButton" name="login_btn">
          <property name="text">
           <string>Log In</string>
          </property>
@@ -191,10 +191,10 @@ QPushButton#minimize_button{
           </size>
          </property>
          <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
+          <enum>QFrame::Shape::NoFrame</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
+          <enum>QFrame::Shadow::Raised</enum>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="spacing">
@@ -226,7 +226,7 @@ QPushButton#minimize_button{
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="register_button">
+           <widget class="QPushButton" name="register_btn">
             <property name="font">
              <font>
               <italic>true</italic>

@@ -2,7 +2,7 @@ import sys
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QStackedWidget, QMessageBox
 
-from General.LoginWindow import LoginWindow
+from Pages.Login import LoginWindow
 
 from Management.MainMenu import MainMenu
 from Management.CommentsWindow import CommentsWindow

@@ -6,8 +6,9 @@ from PySide6.QtCore import QFile
 
 
 class RegisterWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.parent = parent
         # Load the ui file
         if __name__ == "__main__":
             ui_file_name = "../uifolder/Register.ui"
@@ -18,17 +19,26 @@ class RegisterWindow(QMainWindow):
         ui_file.close()
         self.setCentralWidget(self.ui)
 
-    def uyeOl(self):
+        # Register Window
+        self.ui.signup_btn.clicked.connect(self.register)
+        self.ui.login_btn.clicked.connect(lambda: self.parent.goto_page(self.parent.loginWindow))
 
-        ad_soyad = self.ui.lineEdit.text()
+    def register_btn_callback(self):
+        if self.parent.registerWindow.register():
+            self.parent.goto_page(self.parent.loginWindow)
 
-        kullanici_adi = self.ui.lineEdit_5.text()
+### DİKKAT! BU FONKSİYON DEĞİŞTİRİLECEKTİR ###
+    def register(self):
 
-        e_posta = self.ui.lineEdit_4.text()
+        ad_soyad = self.ui.name_le.text()
 
-        cep_telefonu = self.ui.lineEdit_2.text()
+        kullanici_adi = self.ui.username_le.text()
 
-        sifre = self.ui.lineEdit_3.text()
+        e_posta = self.ui.email_le.text()
+
+        cep_telefonu = self.ui.phone_le.text()
+
+        sifre = self.ui.password_le.text()
 
         k_adlari = []
         mailler = []

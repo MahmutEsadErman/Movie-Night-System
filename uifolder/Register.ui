@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>centralwidget</class>
+ <widget class="QWidget" name="centralwidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -70,10 +70,10 @@ QPushButton#login_button{
       <string notr="true"/>
      </property>
      <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
+      <enum>QFrame::Shape::NoFrame</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+      <enum>QFrame::Shadow::Raised</enum>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -84,16 +84,19 @@ QPushButton#login_button{
           <height>40</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 255, 255);</string>
+        </property>
         <property name="text">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt;&quot;&gt;Kayıt ol&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignCenter</set>
+         <set>Qt::AlignmentFlag::AlignCenter</set>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit">
+       <widget class="QLineEdit" name="name_le">
         <property name="text">
          <string/>
         </property>
@@ -103,14 +106,14 @@ QPushButton#login_button{
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_5">
+       <widget class="QLineEdit" name="username_le">
         <property name="placeholderText">
          <string>Kullanıcı Adı</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_4">
+       <widget class="QLineEdit" name="email_le">
         <property name="text">
          <string/>
         </property>
@@ -120,7 +123,7 @@ QPushButton#login_button{
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_2">
+       <widget class="QLineEdit" name="phone_le">
         <property name="text">
          <string/>
         </property>
@@ -130,7 +133,7 @@ QPushButton#login_button{
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_3">
+       <widget class="QLineEdit" name="password_le">
         <property name="inputMask">
          <string/>
         </property>
@@ -138,7 +141,7 @@ QPushButton#login_button{
          <string/>
         </property>
         <property name="echoMode">
-         <enum>QLineEdit::Password</enum>
+         <enum>QLineEdit::EchoMode::Password</enum>
         </property>
         <property name="dragEnabled">
          <bool>false</bool>
@@ -152,7 +155,7 @@ QPushButton#login_button{
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="signup_button">
+       <widget class="QPushButton" name="signup_btn">
         <property name="text">
          <string>Kayıt Ol</string>
         </property>
@@ -173,10 +176,10 @@ QPushButton#login_button{
          </size>
         </property>
         <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+         <enum>QFrame::Shape::NoFrame</enum>
         </property>
         <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
+         <enum>QFrame::Shadow::Raised</enum>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <property name="spacing">
@@ -195,7 +198,7 @@ QPushButton#login_button{
           <number>0</number>
          </property>
          <item>
-          <widget class="QPushButton" name="login_button">
+          <widget class="QPushButton" name="login_btn">
            <property name="font">
             <font>
              <italic>true</italic>
