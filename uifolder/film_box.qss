@@ -1,0 +1,9 @@
+QWidget{border: 0px;
+        border-radius: 10px;
+        color: white;
+        background-color: rgba(39, 44, 54, 120);}
+QWidget:hover{border: 2px solid rgb(64, 71, 88);
+                border-radius: 10px;
+                color: white;}
+QLabel::hover{border: 0px;
+        }

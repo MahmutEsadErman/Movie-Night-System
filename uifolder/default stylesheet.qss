@@ -1,3 +1,39 @@
+QWidget{
+	background-color: rgb(39, 44, 54);
+}
+
+QLineEdit{
+	min-height: 45px;
+	border-radius: 20px;
+	background-color: #FFFFFF;
+	padding-left: 20px;
+	color: rgb(140, 140, 140);
+}
+
+QLineEdit:hover{
+	border: 2px solid rgb(139, 142, 139);
+}
+
+QPushButton{
+	min-height: 45px;
+	border-radius: 20px;
+	background-color: rgb(44, 66, 81);
+	color: #FFFFFF;
+}
+
+QPushButton:hover{
+	border: 2px solid rgb(255, 255, 255);
+}
+
+QLabel{
+    background-color: transparent;
+	color: rgb(95, 94, 108);
+}
+
+QFrame{
+    background-color: transparent;
+}
+
 QToolTip {
                 color: #ffffff;
                 background-color: rgba(27, 29, 35, 160);
@@ -89,6 +125,7 @@ QCheckBox::indicator {
 	height: 15px;
 	border-radius: 10px;
     background: rgb(44, 49, 60);
+    background-color: transparent;
 }
 QCheckBox::indicator:hover {
     border: 3px solid rgb(58, 66, 81);

@@ -74,39 +74,27 @@ QLabel{
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="exit_btn">
+       <widget class="QLineEdit" name="search_le">
+        <property name="styleSheet">
+         <string notr="true">QLineEdit{
+	color: rgb(28, 43, 52);
+}</string>
+        </property>
         <property name="text">
-         <string>geri dön</string>
+         <string/>
+        </property>
+        <property name="placeholderText">
+         <string>Filmin Adı</string>
         </property>
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="add_film_btn">
+       <widget class="QPushButton" name="search_btn">
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;add film&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>Film Ekle</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="invite_btn">
-        <property name="text">
-         <string>Davet Et</string>
+         <string>Ara</string>
         </property>
        </widget>
       </item>
@@ -135,42 +123,13 @@ QLabel{
           <x>0</x>
           <y>0</y>
           <width>638</width>
-          <height>319</height>
+          <height>425</height>
          </rect>
         </property>
        </widget>
       </widget>
      </item>
     </layout>
-   </item>
-   <item>
-    <widget class="QScrollArea" name="friends_sa">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>100</height>
-      </size>
-     </property>
-     <property name="widgetResizable">
-      <bool>true</bool>
-     </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents_4">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>640</width>
-        <height>98</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
    </item>
   </layout>
  </widget>

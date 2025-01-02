@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QStackedWidget, QMessag
 from Pages.Login import LoginWindow
 from Pages.Register import RegisterWindow
 from Pages.MainMenu import MainMenu
+from Pages.RoomPage import RoomPage
 
 
 class MainWindow(QMainWindow):
@@ -27,14 +28,16 @@ class MainWindow(QMainWindow):
         # Setting Pages
         self.stackedWidget = QStackedWidget()
         self.loginWindow = LoginWindow(self)
-        self.mainmenu = MainMenu(self)
         self.registerWindow = RegisterWindow(self)
+        self.mainmenu = MainMenu(self)
+        self.roomPage = RoomPage(self)
 
         self.stackedWidget.addWidget(self.loginWindow)
         self.stackedWidget.addWidget(self.registerWindow)
         self.stackedWidget.addWidget(self.mainmenu)
+        self.stackedWidget.addWidget(self.roomPage)
 
-        self.stackedWidget.setCurrentWidget(self.loginWindow)
+        self.stackedWidget.setCurrentWidget(self.mainmenu)
 
         # Add Stacked Widget to the layout
         self.setCentralWidget(self.stackedWidget)

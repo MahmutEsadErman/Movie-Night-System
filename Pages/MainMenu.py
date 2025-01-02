@@ -19,6 +19,8 @@ class MainMenu(QMainWindow):
         ui_file.close()
         self.setCentralWidget(self.ui)
 
+        self.ui.new_room_btn.clicked.connect(lambda: self.parent.goto_page(self.parent.roomPage))
+        self.ui.join_btn.clicked.connect(lambda: self.parent.goto_page(self.parent.roomPage))
         self.ui.exit_btn.clicked.connect(lambda: self.parent.goto_page(self.parent.loginWindow))
 
 
