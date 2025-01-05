@@ -17,7 +17,7 @@ class MainWindow(QMainWindow):
             self.db_connection = psycopg2.connect(
                 dbname="movie_night",
                 user="postgres",
-                password="123",
+                password="halil123",
                 host="localhost",
                 port= "5432"
             )
@@ -45,8 +45,8 @@ class MainWindow(QMainWindow):
         self.stackedWidget = QStackedWidget()
         self.loginWindow = LoginWindow(self, self.db_connection)
         self.registerWindow = RegisterWindow(self, self.db_connection)
-        self.mainmenu = MainMenu(self)
-        self.roomPage = RoomPage(self)
+        self.mainmenu = MainMenu(self, self.db_connection)
+        self.roomPage = RoomPage(self, self.db_connection)
 
         self.stackedWidget.addWidget(self.loginWindow)
         self.stackedWidget.addWidget(self.registerWindow)
