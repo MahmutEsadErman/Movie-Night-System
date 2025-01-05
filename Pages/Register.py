@@ -66,6 +66,8 @@ class RegisterWindow(QMainWindow):
         except psycopg2.Error as e:
             QMessageBox.critical(self, "Hata", f"Veritabanı hatası: {str(e)}")
             return False
+        finally:
+            cursor.close()
 
 
 if __name__ == "__main__":

@@ -10,9 +10,10 @@ from Pages.Trailer import TrailerWidget
 
 
 class FilmSearch(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, db_connection=None):
         super().__init__(parent)
         self.parent = parent
+        self.db_connection = db_connection
         # Load the ui file
         if __name__ == "__main__":
             ui_file_name = "../uifolder/FilmSearch.ui"
@@ -59,9 +60,34 @@ class FilmSearch(QDialog):
 
     # WIP - Bu fonksiyonu daha sonra düzenleyeceğiz
     def initialize_films(self):
-        paul_url = "https://www.youtube.com/embed/QC3sDbVcAbw?si=GRM0H7NBIhLTMeHH"
-        for i in range(10):
-            self.add_film(QImage("database/deneme.jpg"), "ayı filmi", paul_url)
+
+        query = """
+            SELECT f_id, f_adi, fragman_url 
+            FROM filmler
+        """
+
+        try:
+            cursor = self.db_connection.cursor()
+            cursor.execute(query)
+            films = cursor.fetchall()
+
+            # Add films to the UI
+            for film in films:
+                f_id, f_adi, fragman_url = film
+                # Assuming you have some method to get the image for each film
+                image = QImage("database/deneme.jpg")  # You can replace this with actual image loading logic
+                self.add_film(image, f_adi, fragman_url)
+
+        except Exception as e:
+            print(f"Error loading films: {e}")
+        finally:
+            cursor.close()
+
+
+
+        #paul_url = "https://www.youtube.com/embed/QC3sDbVcAbw?si=GRM0H7NBIhLTMeHH"
+        #for i in range(10):
+        #    self.add_film(QImage("database/deneme.jpg"), "ayı filmi", paul_url)
 
     # WIP - Bu fonksiyonu daha sonra düzenleyeceğim
     def add_film(self, image, name, url):

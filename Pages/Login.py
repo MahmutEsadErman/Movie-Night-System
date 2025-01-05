@@ -29,9 +29,10 @@ class LoginWindow(QMainWindow):
 
     # WIP - This function will be changed
     def login(self):
-        success, k_adi = self.giris_yap()
+        success, k_id = self.giris_yap()
         if success:
-            self.k_adi = k_adi
+            self.k_id = k_id
+            self.parent.mainmenu.kullanici_id = k_id
             self.parent.goto_page(self.parent.mainmenu)
 
         else:
@@ -46,7 +47,7 @@ class LoginWindow(QMainWindow):
             cursor = self.db_connection.cursor()
 
             query = """
-                SELECT email, sifre_hash, fname 
+                SELECT email, sifre_hash, k_id 
                 FROM kullanici 
                 WHERE email = %s AND sifre_hash = %s
             """
@@ -55,8 +56,8 @@ class LoginWindow(QMainWindow):
             result = cursor.fetchone()
 
             if result:
-                k_adi = result[2]
-                return True, k_adi
+                k_id = result[2]
+                return True, k_id
             else:
                 return False, None
 

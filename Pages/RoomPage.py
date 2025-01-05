@@ -29,9 +29,10 @@ def create_circular_image_label(pixmap, size):
 
 
 class RoomPage(QMainWindow):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, db_connection=None):
         super().__init__(parent)
         self.parent = parent
+        self.db_connection = db_connection
         # Load the ui file
         if __name__ == "__main__":
             ui_file_name = "../uifolder/Room.ui"
@@ -79,7 +80,7 @@ class RoomPage(QMainWindow):
         pass
 
     def choose_film(self):
-        new_dialog = FilmSearch(self)
+        new_dialog = FilmSearch(self, self.db_connection)
         film = new_dialog.exec()
         if film:
             self.add_film(film)

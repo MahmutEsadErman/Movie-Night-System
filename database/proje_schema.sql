@@ -9,10 +9,8 @@ CREATE TABLE kullanici (
 
 --DROP TABLE etkinlik;
 CREATE TABLE etkinlik (
-  e_adi   varchar(25) not null,
-  e_id          char(5),
+  e_id          serial PRIMARY KEY,
   kurucu_id     smallint not null, 
-  primary key (e_id),
   foreign key (kurucu_id) references kullanici(k_id)
 );
 
@@ -24,9 +22,23 @@ CREATE TABLE filmler (
   primary key (f_id)
 );
 
+INSERT INTO filmler (f_id, f_adi, fragman_url)
+VALUES 
+(1, 'Inception', 'https://www.youtube.com/watch?v=YoHD9XEInc0'),
+(2, 'The Matrix', 'https://www.youtube.com/watch?v=vKQi3bBA1y8'),
+(3, 'The Dark Knight', 'https://www.youtube.com/watch?v=EXeTwQWrcwY'),
+(4, 'Interstellar', 'https://www.youtube.com/watch?v=zSWdZVtXT7E'),
+(5, 'Shutter Island', 'https://www.youtube.com/watch?v=v8yrZSkKxTA'),
+(6, 'Fight Club', 'https://www.youtube.com/watch?v=SUXWAEX2jlg'),
+(7, 'Braveheart', 'https://www.youtube.com/watch?v=1NJO0jxBtMo'),
+(8, 'Whiplash', 'https://www.youtube.com/watch?v=7d_jQycdQGo'),
+(9, 'The Godfather', 'https://www.youtube.com/watch?v=sY1S34973zA'),
+(10, 'Gladiator', 'https://www.youtube.com/watch?v=P5ieIbInFpg');
+
+
 --DROP TABLE katilimci;
 CREATE TABLE katilimci (
-  e_idnum char(5),
+  e_idnum integer,
   k_idnum smallint,
   primary key (e_idnum,k_idnum),
   foreign key (e_idnum) references etkinlik(e_id),
