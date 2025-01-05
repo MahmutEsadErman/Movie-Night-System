@@ -1,4 +1,5 @@
 import sys
+import psycopg2
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QStackedWidget, QMessageBox
 
@@ -11,6 +12,21 @@ from Pages.RoomPage import RoomPage
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        try:
+            self.db_connection = psycopg2.connect(
+                dbname="movie_night",
+                user="postgres",
+                password="123",
+                host="localhost",
+                port= "5432"
+            )
+            print("Veritabanına bağlantı başarılı!")
+
+        except psycopg2.Error as e:
+
+            print(f"Veritabanı bağlantı hatası: {e}")
+            sys.exit(1)
 
         self.k_adi = None
 
@@ -27,8 +43,8 @@ class MainWindow(QMainWindow):
 
         # Setting Pages
         self.stackedWidget = QStackedWidget()
-        self.loginWindow = LoginWindow(self)
-        self.registerWindow = RegisterWindow(self)
+        self.loginWindow = LoginWindow(self, self.db_connection)
+        self.registerWindow = RegisterWindow(self, self.db_connection)
         self.mainmenu = MainMenu(self)
         self.roomPage = RoomPage(self)
 
@@ -37,7 +53,7 @@ class MainWindow(QMainWindow):
         self.stackedWidget.addWidget(self.mainmenu)
         self.stackedWidget.addWidget(self.roomPage)
 
-        self.stackedWidget.setCurrentWidget(self.mainmenu)
+        self.stackedWidget.setCurrentWidget(self.loginWindow)
 
         # Add Stacked Widget to the layout
         self.setCentralWidget(self.stackedWidget)
