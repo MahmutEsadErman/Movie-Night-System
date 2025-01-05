@@ -1,4 +1,5 @@
 import sys
+import psycopg2
 
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
@@ -6,9 +7,12 @@ from PySide6.QtCore import QFile
 
 
 class RegisterWindow(QMainWindow):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, db_connection=None):
         super().__init__(parent)
         self.parent = parent
+
+        self.db_connection = db_connection
+
         # Load the ui file
         if __name__ == "__main__":
             ui_file_name = "../uifolder/Register.ui"
@@ -30,40 +34,38 @@ class RegisterWindow(QMainWindow):
 ### DİKKAT! BU FONKSİYON DEĞİŞTİRİLECEKTİR ###
     def register(self):
 
-        ad_soyad = self.ui.name_le.text()
+        ad = self.ui.name_le.text()
 
-        kullanici_adi = self.ui.username_le.text()
+        soyad = self.ui.surname_le.text()
 
         e_posta = self.ui.email_le.text()
 
-        cep_telefonu = self.ui.phone_le.text()
-
         sifre = self.ui.password_le.text()
 
-        k_adlari = []
-        mailler = []
-        numaralar = []
+        try:
+            # Veritabanı bağlantısı
 
-        with open("database/kullanicilar.txt", "r", encoding='utf-8') as dosya:
-            for satir in dosya:
-                bilgiler = satir.strip().split("-")
-                k_adlari.append(bilgiler[1])
-                mailler.append(bilgiler[2])
-                numaralar.append(bilgiler[3])
+            cursor = self.db_connection.cursor()
 
-        if kullanici_adi in k_adlari:
-            QMessageBox.warning(self, "Uyarı", "Bu kullanıcı adı zaten alınmış.")
-            return False
-        elif e_posta in mailler:
-            QMessageBox.warning(self, "Uyarı", "Bu E-posta zaten alınmış.")
-            return False
-        elif cep_telefonu in numaralar:
-            QMessageBox.warning(self, "Uyarı", "Bu telefon numarası zaten alınmış.")
-            return False
-        else:
-            with open("database/kullanicilar.txt", "a", encoding='utf-8') as dosya:
-                dosya.write(ad_soyad + "-" + kullanici_adi + "-" + e_posta + "-" + cep_telefonu + "-" + sifre + "\n")
+            # Kullanıcı adı kontrolü
+            cursor.execute("SELECT COUNT(*) FROM kullanici WHERE email = %s", (e_posta,))
+            if cursor.fetchone()[0] > 0:
+                QMessageBox.warning(self, "Uyarı", "Bu e posta zaten alınmış.")
+                return False
+
+            # Yeni kullanıcıyı ekleme
+            query = """
+                INSERT INTO kullanici (fname, lname, email, sifre_hash) 
+                VALUES (%s, %s, %s, %s)
+            """
+            cursor.execute(query, (ad, soyad, e_posta, sifre))
+            self.db_connection.commit()
+
             return True
+        
+        except psycopg2.Error as e:
+            QMessageBox.critical(self, "Hata", f"Veritabanı hatası: {str(e)}")
+            return False
 
 
 if __name__ == "__main__":

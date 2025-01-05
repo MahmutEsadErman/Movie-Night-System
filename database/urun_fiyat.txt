@@ -1,9 +1,0 @@
-Kebap,150
-Büryan,180
-Tavuk Şiş,140
-Köfte,150
-Çorba,50
-İskender,170
-Ayran,25
-Meyve Suyu,25
-Çay,10

@@ -2,10 +2,9 @@
 CREATE TABLE kullanici (
   fname    varchar(15) not null, 
   lname    varchar(15) not null,
-  k_id     smallint,
+  k_id     serial PRIMARY KEY,
   email  varchar(50),
-  sifre_hash varchar(100),
-  primary key (k_id)
+  sifre_hash varchar(100)
 );
 
 --DROP TABLE etkinlik;

@@ -101,14 +101,14 @@ QPushButton#login_button{
          <string/>
         </property>
         <property name="placeholderText">
-         <string>Ad Soyad</string>
+         <string>Ad</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="username_le">
+       <widget class="QLineEdit" name="surname_le">
         <property name="placeholderText">
-         <string>Kullanıcı Adı</string>
+         <string>Soyad</string>
         </property>
        </widget>
       </item>
@@ -118,17 +118,7 @@ QPushButton#login_button{
          <string/>
         </property>
         <property name="placeholderText">
-         <string>Eposta</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="phone_le">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="placeholderText">
-         <string>Cep telefonu</string>
+         <string>E Posta</string>
         </property>
        </widget>
       </item>
