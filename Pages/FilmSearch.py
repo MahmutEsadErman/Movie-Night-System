@@ -4,7 +4,7 @@ from PySide6.QtGui import QPixmap, QImage, QPainter, QPainterPath
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QApplication, QWidget, QGridLayout, QVBoxLayout, QLabel, QInputDialog, \
     QSizePolicy, QDialog
-from PySide6.QtCore import QFile, Qt, QEvent
+from PySide6.QtCore import QFile, Qt, QEvent, QByteArray
 
 from Pages.Trailer import TrailerWidget
 
@@ -62,7 +62,7 @@ class FilmSearch(QDialog):
     def initialize_films(self):
 
         query = """
-            SELECT f_id, f_adi, fragman_url 
+            SELECT f_id, f_adi, f_resim, fragman_url 
             FROM filmler
         """
 
@@ -73,9 +73,11 @@ class FilmSearch(QDialog):
 
             # Add films to the UI
             for film in films:
-                f_id, f_adi, fragman_url = film
-                # Assuming you have some method to get the image for each film
-                image = QImage("database/deneme.jpg")  # You can replace this with actual image loading logic
+                f_id, f_adi, f_resim, fragman_url = film
+                byte_array = QByteArray(bytes(f_resim))
+                # Create QImage from QByteArray
+                image = QImage()
+                image.loadFromData(byte_array)
                 self.add_film(image, f_adi, fragman_url)
 
         except Exception as e:

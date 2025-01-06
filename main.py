@@ -15,11 +15,11 @@ class MainWindow(QMainWindow):
 
         try:
             self.db_connection = psycopg2.connect(
-                dbname="movie_night",
+                dbname="movienight_db",
                 user="postgres",
-                password="halil123",
+                password="kitel56",
                 host="localhost",
-                port= "5432"
+                port="5432"
             )
             print("Veritabanına bağlantı başarılı!")
 

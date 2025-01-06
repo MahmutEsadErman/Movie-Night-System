@@ -9,7 +9,7 @@ class MainMenu(QMainWindow):
     def __init__(self, parent=None, db_connection=None, kullanici_id=None):
         super().__init__(parent)
         self.parent = parent
-        
+
         self.db_connection = db_connection
         self.kullanici_id = kullanici_id
 
@@ -27,7 +27,6 @@ class MainMenu(QMainWindow):
         self.ui.join_btn.clicked.connect(self.join_event)
         self.ui.exit_btn.clicked.connect(lambda: self.parent.goto_page(self.parent.loginWindow))
 
-    
     def add_event(self):
 
         try:
@@ -54,10 +53,10 @@ class MainMenu(QMainWindow):
         finally:
             cursor.close()
             self.parent.goto_page(self.parent.roomPage)
-        
+
     def join_event(self):
         room_id = self.ui.room_id_le.text()
-    
+
         try:
             # Veritabanında room_id kontrolü
             cursor = self.db_connection.cursor()
@@ -90,7 +89,6 @@ class MainMenu(QMainWindow):
 
         finally:
             cursor.close()
-
 
 
 if __name__ == "__main__":
