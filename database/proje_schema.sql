@@ -30,7 +30,7 @@ VALUES
 (4, 'Interstellar', 'https://www.youtube.com/watch?v=zSWdZVtXT7E'),
 (5, 'Shutter Island', 'https://www.youtube.com/watch?v=v8yrZSkKxTA'),
 (6, 'Fight Club', 'https://www.youtube.com/watch?v=SUXWAEX2jlg'),
-(7, 'Braveheart', 'https://www.youtube.com/watch?v=1NJO0jxBtMo'),
+(7, 'Braveheart', 'https://www.youtube.com/embed/1NJO0jxBtMo?si=RGp7ZSQGMEJUSdb9'),
 (8, 'Whiplash', 'https://www.youtube.com/watch?v=7d_jQycdQGo'),
 (9, 'The Godfather', 'https://www.youtube.com/watch?v=sY1S34973zA'),
 (10, 'Gladiator', 'https://www.youtube.com/watch?v=P5ieIbInFpg');
@@ -100,14 +100,17 @@ EXECUTE FUNCTION etkinlik_sil();
 CREATE OR REPLACE FUNCTION etkinlik_sil()
 RETURNS TRIGGER AS $$
 BEGIN
-  -- Eğer silinen kullanıcı o etkinliğin kurucusu ise etkinliği sil
+  -- Eğer silinen kullanıcı etkinliğin kurucusu ise
   IF EXISTS (
     SELECT 1 
     FROM etkinlik 
     WHERE e_id = OLD.e_idnum AND kurucu_id = OLD.k_idnum
   ) THEN
+
+    DELETE FROM e_film_liste WHERE e_idf = OLD.e_idnum;
     DELETE FROM etkinlik WHERE e_id = OLD.e_idnum;
   END IF;
+
   RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;

@@ -91,7 +91,7 @@ class RoomPage(QMainWindow):
 
     def choose_film(self):
 
-        new_dialog = FilmSearch(self, self.db_connection)
+        new_dialog = FilmSearch(self, self.db_connection, self.event_id)
         film = new_dialog.exec()
         if film:
             # Film seçildiğinde, veritabanına kaydediyoruz
