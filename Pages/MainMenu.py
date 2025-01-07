@@ -49,10 +49,12 @@ class MainMenu(QMainWindow):
             self.db_connection.commit()
 
         except Exception as e:
-            QMessageBox.critical(self, "Hata", f"Etkinlik eklenemedi: {e}")
+            QMessageBox.critical(self, "Hata", f"Veritabani hatasi: {e}")
 
         finally:
             cursor.close()
+            self.parent.roomPage.kullanici_id = self.kullanici_id
+            self.parent.roomPage.event_id = event_id
             self.parent.goto_page(self.parent.roomPage)
         
     def join_event(self):
@@ -79,6 +81,8 @@ class MainMenu(QMainWindow):
                 self.db_connection.commit()
 
                 # Oda bulunduysa, ilgili odaya geçiş yap
+                self.parent.roomPage.kullanici_id = self.kullanici_id
+                self.parent.roomPage.event_id = room_id
                 self.parent.goto_page(self.parent.roomPage)  # Oda sayfasına geçiş
             else:
 

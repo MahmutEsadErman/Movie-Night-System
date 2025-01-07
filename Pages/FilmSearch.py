@@ -73,10 +73,12 @@ class FilmSearch(QDialog):
 
             # Add films to the UI
             for film in films:
-                f_id, f_adi, fragman_url = film
-                # Assuming you have some method to get the image for each film
-                image = QImage("database/deneme.jpg")  # You can replace this with actual image loading logic
-                self.add_film(image, f_adi, fragman_url)
+                f_id, f_adi, f_resim, fragman_url = film
+                byte_array = QByteArray(bytes(f_resim))
+                # Create QImage from QByteArray
+                image = QImage()
+                image.loadFromData(byte_array)
+                self.add_film(image, f_adi, fragman_url, f_id)
 
         except Exception as e:
             print(f"Error loading films: {e}")
@@ -90,10 +92,10 @@ class FilmSearch(QDialog):
         #    self.add_film(QImage("database/deneme.jpg"), "ayı filmi", paul_url)
 
     # WIP - Bu fonksiyonu daha sonra düzenleyeceğim
-    def add_film(self, image, name, url):
+    def add_film(self, image, name, url, f_id):
         # Create a new target
         self.films_no += 1
-        self.films[self.films_no] = {"image": image, "name": name, "vote_no": 0, "url": url}
+        self.films[self.films_no] = {"image": image, "name": name, "vote_no": 0, "url": url, "id": f_id}
 
         # Create a container widget for the target
         film_box = self.create_film_box(f"film{self.films_no}", QPixmap.fromImage(image), name)

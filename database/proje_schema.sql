@@ -40,9 +40,9 @@ VALUES
 CREATE TABLE katilimci (
   e_idnum integer,
   k_idnum smallint,
-  primary key (e_idnum,k_idnum),
-  foreign key (e_idnum) references etkinlik(e_id),
-  foreign key (k_idnum) references kullanici(k_id)
+  PRIMARY KEY (e_idnum, k_idnum),
+  FOREIGN KEY (e_idnum) REFERENCES etkinlik(e_id) ON DELETE CASCADE,
+  FOREIGN KEY (k_idnum) REFERENCES kullanici(k_id)
 );
 
 --DROP TABLE e_film_liste;
@@ -89,3 +89,25 @@ CREATE TRIGGER kurucu_silemez
 BEFORE DELETE ON kullanici
 FOR EACH ROW
 EXECUTE FUNCTION prevent_kurucu_silimi();
+
+
+CREATE TRIGGER katilimci_sil
+AFTER DELETE ON katilimci
+FOR EACH ROW
+EXECUTE FUNCTION etkinlik_sil();
+
+
+CREATE OR REPLACE FUNCTION etkinlik_sil()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Eğer silinen kullanıcı o etkinliğin kurucusu ise etkinliği sil
+  IF EXISTS (
+    SELECT 1 
+    FROM etkinlik 
+    WHERE e_id = OLD.e_idnum AND kurucu_id = OLD.k_idnum
+  ) THEN
+    DELETE FROM etkinlik WHERE e_id = OLD.e_idnum;
+  END IF;
+  RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
