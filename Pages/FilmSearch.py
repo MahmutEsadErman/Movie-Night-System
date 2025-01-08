@@ -155,8 +155,7 @@ class FilmSearch(QDialog):
     def add_film(self, image, name, url, id, vote):
         # Create a new target
         self.films_no += 1
-        self.films[self.films_no] = {"image": image, "name": name, "vote_no": vote, "url": url, "id": id}
-
+        self.films[self.films_no] = {"image": image, "name": name, "vote_no": vote[0], "url": url, "id": id}
         # Create a container widget for the target
         film_box = self.create_film_box(f"film{self.films_no}", QPixmap.fromImage(image), name)
 
@@ -191,9 +190,9 @@ class FilmSearch(QDialog):
         layout.addWidget(name_label)
 
         # Create the text label
-        vote_label = QLabel(str(0))
-        vote_label.setAlignment(Qt.AlignCenter | Qt.AlignCenter)
-        layout.addWidget(vote_label)
+        #vote_label = QLabel(str(0))
+        #vote_label.setAlignment(Qt.AlignCenter | Qt.AlignCenter)
+        #layout.addWidget(vote_label)
 
         # Set click event for container
         film_box.installEventFilter(self)

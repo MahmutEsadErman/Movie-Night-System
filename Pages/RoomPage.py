@@ -133,7 +133,7 @@ class RoomPage(QMainWindow):
                 # Create QImage from QByteArray
                 image = QImage()
                 image.loadFromData(byte_array)
-                self.add_film({"image": image,"name": f_adi, "vote_no": oylar, "url": fragman_url, "id": f_id})  # QImage nesnesini kullan})
+                self.add_film({"image": image,"name": f_adi, "vote_no": oylar, "url": fragman_url, "id": f_id}) 
 
         except Exception as e:
             QMessageBox.critical(self, "Hata", f"Veritabanı hatası: {e}")
@@ -195,7 +195,7 @@ class RoomPage(QMainWindow):
         self.films[self.films_no] = film
 
         # Create a container widget for the target
-        film_box = self.create_film_box(f"film{self.films_no}", QPixmap.fromImage(film["image"]), film["name"])
+        film_box = self.create_film_box(f"film{self.films_no}", QPixmap.fromImage(film["image"]), film["name"], vote_count=film["vote_no"])
 
         # Add the film_box widget to the grid layout
         self.filmsWidget.layout().addWidget(film_box, self.row, self.column)
@@ -216,7 +216,7 @@ class RoomPage(QMainWindow):
         self.friendsWidget.layout().addWidget(friend_box, 0, self.friends_no)
         self.friends_no += 1
 
-    def create_film_box(self, objectname, pixmap, name):
+    def create_film_box(self, objectname, pixmap, name, vote_count=0):
         # Create a QWidget to hold both labels
         film_box = QWidget(objectName=objectname)
         layout = QVBoxLayout()
@@ -239,7 +239,7 @@ class RoomPage(QMainWindow):
         layout.addWidget(name_label)
 
         # Create the text label
-        vote_label = QLabel(str(0))
+        vote_label = QLabel(f"{vote_count}")
         vote_label.setAlignment(Qt.AlignCenter | Qt.AlignCenter)
         layout.addWidget(vote_label)
 
@@ -280,7 +280,7 @@ class RoomPage(QMainWindow):
             # When double clicked open a new window
             if event.type() == QEvent.MouseButtonDblClick:
                 no = int(obj.objectName().lstrip("film"))
-                dialog = TrailerWidget(url=self.films[no]["url"])
+                dialog = TrailerWidget(db_connection=self.db_connection, url=self.films[no]["url"], oy=True, event_id=self.event_id, f_id=self.films[no]["id"])
                 if dialog.exec() == QDialog.Accepted:
                     self.vote_film(no)
 
