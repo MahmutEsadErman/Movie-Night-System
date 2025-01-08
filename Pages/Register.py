@@ -60,7 +60,7 @@ class RegisterWindow(QMainWindow):
             """
             cursor.execute(query, (ad, soyad, e_posta, sifre))
             self.db_connection.commit()
-
+            self.parent.goto_page(self.parent.loginWindow)
             return True
         
         except psycopg2.Error as e:

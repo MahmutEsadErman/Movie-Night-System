@@ -9,7 +9,7 @@ class MainMenu(QMainWindow):
     def __init__(self, parent=None, db_connection=None, kullanici_id=None):
         super().__init__(parent)
         self.parent = parent
-        
+
         self.db_connection = db_connection
         self.kullanici_id = kullanici_id
 
@@ -27,6 +27,7 @@ class MainMenu(QMainWindow):
         self.ui.join_btn.clicked.connect(self.join_event)
         self.ui.exit_btn.clicked.connect(lambda: self.parent.goto_page(self.parent.loginWindow))
 
+
         # Start the davetliler check thread
         self.check_davetliler_thread = CheckDavetliler(self.db_connection, self.kullanici_id)
         self.check_davetliler_thread.result_signal.connect(self.handle_davetliler_check)
@@ -38,7 +39,6 @@ class MainMenu(QMainWindow):
             event_ids_str = ", ".join(map(str, event_ids))
             QMessageBox.information(self, "Davetler", f"Bir etkinlikte davetlisiniz! Etkinlik ID'leri: {event_ids_str}")
 
-    
     def add_event(self):
 
         try:
@@ -67,10 +67,10 @@ class MainMenu(QMainWindow):
             self.parent.roomPage.kullanici_id = self.kullanici_id
             self.parent.roomPage.event_id = event_id
             self.parent.goto_page(self.parent.roomPage)
-        
+
     def join_event(self):
         room_id = self.ui.room_id_le.text()
-    
+
         try:
             # Veritabanında room_id kontrolü
             cursor = self.db_connection.cursor()
@@ -105,7 +105,6 @@ class MainMenu(QMainWindow):
 
         finally:
             cursor.close()
-
 
 
 if __name__ == "__main__":
