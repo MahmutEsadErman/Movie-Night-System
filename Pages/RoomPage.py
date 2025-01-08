@@ -48,7 +48,6 @@ class RoomPage(QMainWindow):
         self.setCentralWidget(self.ui)
 
         # Button Functions
-        paul_url = "https://www.youtube.com/embed/QC3sDbVcAbw?si=GRM0H7NBIhLTMeHH"
         self.ui.add_film_btn.clicked.connect(self.choose_film)
         self.ui.invite_btn.clicked.connect(self.invite_friend)
         self.ui.exit_btn.clicked.connect(self.exit)
