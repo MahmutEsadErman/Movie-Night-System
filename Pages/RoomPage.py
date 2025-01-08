@@ -3,11 +3,13 @@ import sys
 from PySide6.QtGui import QPixmap, QImage, QPainter, QPainterPath
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QGridLayout, QVBoxLayout, QLabel, QInputDialog, \
-    QSizePolicy, QDialog
-from PySide6.QtCore import QFile, Qt, QEvent
+    QSizePolicy, QDialog, QMessageBox
+from PySide6.QtCore import QFile, Qt, QEvent, QByteArray
 
 from Pages.FilmSearch import FilmSearch
 from Pages.Trailer import TrailerWidget
+
+from io import BytesIO
 
 
 def create_circular_image_label(pixmap, size):
@@ -29,10 +31,12 @@ def create_circular_image_label(pixmap, size):
 
 
 class RoomPage(QMainWindow):
-    def __init__(self, parent=None, db_connection=None):
+    def __init__(self, parent=None, db_connection=None, kullanici_id= None, event_id = None):
         super().__init__(parent)
         self.parent = parent
         self.db_connection = db_connection
+        self.kullanici_id = kullanici_id
+        self.event_id = event_id
         # Load the ui file
         if __name__ == "__main__":
             ui_file_name = "../uifolder/Room.ui"
@@ -44,10 +48,9 @@ class RoomPage(QMainWindow):
         self.setCentralWidget(self.ui)
 
         # Button Functions
-        paul_url = "https://www.youtube.com/embed/QC3sDbVcAbw?si=GRM0H7NBIhLTMeHH"
         self.ui.add_film_btn.clicked.connect(self.choose_film)
         self.ui.invite_btn.clicked.connect(self.invite_friend)
-        self.ui.exit_btn.clicked.connect(lambda: self.parent.goto_page(self.parent.mainmenu))
+        self.ui.exit_btn.clicked.connect(self.exit)
 
         # Set Widget inside Film Scroll Area
         self.filmsWidget = QWidget()
@@ -76,24 +79,154 @@ class RoomPage(QMainWindow):
         self.friendsWidget.layout().setAlignment(Qt.AlignRight | Qt.AlignTop)
         self.ui.friends_sa.setWidget(self.friendsWidget)
 
+
+    def showEvent(self, event):
+        # RoomPage açıldığında filmleri yükle
+        self.load_films_for_event()  # Bu satırda fonksiyon çağrılıyor
+        super().showEvent(event)  # Super sınıfın showEvent fonksiyonunu çağır
+
     def vote_film(self, no):
         pass
 
     def choose_film(self):
-        new_dialog = FilmSearch(self, self.db_connection)
+
+        new_dialog = FilmSearch(self, self.db_connection, self.event_id)
         film = new_dialog.exec()
         if film:
-            self.add_film(film)
+            
+            cursor = self.db_connection.cursor()
+            try:
+                # Seçilen filmi e_film_liste tablosuna ekle
+                insert_query = """
+                INSERT INTO e_film_liste (e_idf, f_idf, oylar) 
+                VALUES (%s, %s, %s);
+                """
+
+                cursor.execute(insert_query, (self.event_id, film["id"], 0))  
+                
+                if self.db_connection.notices:
+                    for notice in self.db_connection.notices:
+                        print("NOTICE:", notice) # Veritabanından gelen noticeleri yazdır DÜZENLENMELİ
+
+
+                self.db_connection.commit()
+                 # Film seçildiğinde, veritabanına kaydediyoruz
+                self.add_film(film)
+
+            except Exception as e:
+                self.db_connection.rollback()
+                QMessageBox.critical(self, "Hata", f"Veritabanı hatası: {e}")
+            finally:
+                cursor.close()
+    
+    def load_films_for_event(self):
+        cursor = self.db_connection.cursor()
+        try:
+            # Etkinlikteki filmleri e_film_liste tablosundan al
+            select_query = """
+            SELECT f.f_id, f.f_adi, f.f_resim, f.fragman_url, ef.oylar
+            FROM e_film_liste ef, filmler f
+            WHERE ef.e_idf = %s and ef.f_idf = f.f_id;
+            """
+            cursor.execute(select_query, (self.event_id,))
+            films = cursor.fetchall()
+
+            # Filmleri ekle
+            for film in films:
+                
+                f_id, f_adi, f_resim, fragman_url, oylar = film
+                byte_array = QByteArray(bytes(f_resim))
+                # Create QImage from QByteArray
+                image = QImage()
+                image.loadFromData(byte_array)
+                self.add_film({"image": image,"name": f_adi, "vote_no": oylar, "url": fragman_url, "id": f_id}) 
+
+        except Exception as e:
+            QMessageBox.critical(self, "Hata", f"Veritabanı hatası: {e}")
+        finally:
+            cursor.close()
+    
+    def exit(self):
+
+        cursor = self.db_connection.cursor()
+
+        try:
+            # Kullanıcıyı katılımcı tablosundan sil
+            delete_participant_query = """
+            DELETE FROM katilimci 
+            WHERE k_idnum = %s and e_idnum = %s;
+            """
+            cursor.execute(delete_participant_query, (self.kullanici_id, self.event_id))
+        
+            if self.db_connection.notices:
+                    for notice in self.db_connection.notices:
+                        print("NOTICE:", notice) # Veritabanından gelen noticeleri yazdır DÜZENLENMELİ
+
+
+            self.db_connection.commit()
+
+        except Exception as e:
+            self.db_connection.rollback()
+            QMessageBox.critical(self, "Hata", f"Veritabani hatasi: {e}")
+
+        finally:
+            cursor.close()
+
+
+        self.clear_films()
+
+        # Ana menüye dön
+        self.parent.goto_page(self.parent.mainmenu)
+
+    def clear_films(self):
+        # self.filmsWidget'teki tüm widget'ları temizle
+        for i in reversed(range(self.filmsWidget.layout().count())):
+            widget = self.filmsWidget.layout().itemAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()  # Widget'ı kaldır
+
+        # Film listelerini sıfırla
+        self.films.clear()
+        self.films_no = 0
+        self.row = 0
+        self.column = 0
 
 
     # WIP - Bu fonksiyonu daha sonra düzenleyeceğim
     def invite_friend(self):
-        # ok, msg = QInputDialog.getText(self, "Invite", "Enter the username:")
-        ok = True
+        msg , ok = QInputDialog.getText(self, "Invite", "Enter the email:")
         if ok:
-            # Add the user to the list
-            self.add_friend(QImage("database/esad.jpg"), "ahmet")
+            cursor = self.db_connection.cursor()
+            try:
+                # Seçilen arkadaşın varlığını kontrol etmek ve davetliler tablosuna eklemek
+                select_query = """
+                SELECT k_id FROM kullanici WHERE email = %s;
+                """
 
+                cursor.execute(select_query, (msg,))  
+
+                friend = cursor.fetchall()
+                if not friend:
+                    QMessageBox.critical(self, "Hata", "Arkadaş bulunamadı")
+                    cursor.close()
+                    return
+                insert_query = """
+                INSERT INTO davetliler (e_idnum, k_idnum)
+                VALUES (%s, %s);
+                """
+
+                cursor.execute(insert_query, (self.event_id, friend[0][0]))
+
+                self.db_connection.commit()
+                # Add the user to the list
+                self.add_friend(QImage("database/esad.jpg"), "ahmet")
+                
+            except Exception as e:
+                self.db_connection.rollback()
+                QMessageBox.critical(self, "Hata", f"Veritabanı hatası: {e}")
+            finally:
+                cursor.close()
+         
     # WIP - Bu fonksiyonu daha sonra düzenleyeceğim
     def add_film(self, film):
         # Create a new target
@@ -101,7 +234,7 @@ class RoomPage(QMainWindow):
         self.films[self.films_no] = film
 
         # Create a container widget for the target
-        film_box = self.create_film_box(f"film{self.films_no}", QPixmap.fromImage(film["image"]), film["name"])
+        film_box = self.create_film_box(f"film{self.films_no}", QPixmap.fromImage(film["image"]), film["name"], vote_count=film["vote_no"])
 
         # Add the film_box widget to the grid layout
         self.filmsWidget.layout().addWidget(film_box, self.row, self.column)
@@ -122,7 +255,7 @@ class RoomPage(QMainWindow):
         self.friendsWidget.layout().addWidget(friend_box, 0, self.friends_no)
         self.friends_no += 1
 
-    def create_film_box(self, objectname, pixmap, name):
+    def create_film_box(self, objectname, pixmap, name, vote_count=0):
         # Create a QWidget to hold both labels
         film_box = QWidget(objectName=objectname)
         layout = QVBoxLayout()
@@ -145,7 +278,7 @@ class RoomPage(QMainWindow):
         layout.addWidget(name_label)
 
         # Create the text label
-        vote_label = QLabel(str(0))
+        vote_label = QLabel(f"{vote_count}")
         vote_label.setAlignment(Qt.AlignCenter | Qt.AlignCenter)
         layout.addWidget(vote_label)
 
@@ -186,7 +319,7 @@ class RoomPage(QMainWindow):
             # When double clicked open a new window
             if event.type() == QEvent.MouseButtonDblClick:
                 no = int(obj.objectName().lstrip("film"))
-                dialog = TrailerWidget(url=self.films[no]["url"])
+                dialog = TrailerWidget(db_connection=self.db_connection, url=self.films[no]["url"], oy=True, event_id=self.event_id, f_id=self.films[no]["id"])
                 if dialog.exec() == QDialog.Accepted:
                     self.vote_film(no)
 
