@@ -94,8 +94,6 @@ class RoomPage(QMainWindow):
         new_dialog = FilmSearch(self, self.db_connection, self.event_id)
         film = new_dialog.exec()
         if film:
-            # Film seçildiğinde, veritabanına kaydediyoruz
-            self.add_film(film)
             
             cursor = self.db_connection.cursor()
             try:
@@ -106,7 +104,16 @@ class RoomPage(QMainWindow):
                 """
 
                 cursor.execute(insert_query, (self.event_id, film["id"], 0))  
+                
+                if self.db_connection.notices:
+                    for notice in self.db_connection.notices:
+                        print("NOTICE:", notice) # Veritabanından gelen noticeleri yazdır DÜZENLENMELİ
+
+
                 self.db_connection.commit()
+                 # Film seçildiğinde, veritabanına kaydediyoruz
+                self.add_film(film)
+
             except Exception as e:
                 self.db_connection.rollback()
                 QMessageBox.critical(self, "Hata", f"Veritabanı hatası: {e}")
@@ -151,6 +158,12 @@ class RoomPage(QMainWindow):
             WHERE k_idnum = %s and e_idnum = %s;
             """
             cursor.execute(delete_participant_query, (self.kullanici_id, self.event_id))
+        
+            if self.db_connection.notices:
+                    for notice in self.db_connection.notices:
+                        print("NOTICE:", notice) # Veritabanından gelen noticeleri yazdır DÜZENLENMELİ
+
+
             self.db_connection.commit()
 
         except Exception as e:
@@ -182,12 +195,39 @@ class RoomPage(QMainWindow):
 
     # WIP - Bu fonksiyonu daha sonra düzenleyeceğim
     def invite_friend(self):
-        # ok, msg = QInputDialog.getText(self, "Invite", "Enter the username:")
-        ok = True
+        msg , ok = QInputDialog.getText(self, "Invite", "Enter the email:")
         if ok:
-            # Add the user to the list
-            self.add_friend(QImage("database/esad.jpg"), "ahmet")
+            cursor = self.db_connection.cursor()
+            try:
+                # Seçilen arkadaşın varlığını kontrol etmek ve davetliler tablosuna eklemek
+                select_query = """
+                SELECT k_id FROM kullanici WHERE email = %s;
+                """
 
+                cursor.execute(select_query, (msg,))  
+
+                friend = cursor.fetchall()
+                if not friend:
+                    QMessageBox.critical(self, "Hata", "Arkadaş bulunamadı")
+                    cursor.close()
+                    return
+                insert_query = """
+                INSERT INTO davetliler (e_idnum, k_idnum)
+                VALUES (%s, %s);
+                """
+
+                cursor.execute(insert_query, (self.event_id, friend[0][0]))
+
+                self.db_connection.commit()
+                # Add the user to the list
+                self.add_friend(QImage("database/esad.jpg"), "ahmet")
+                
+            except Exception as e:
+                self.db_connection.rollback()
+                QMessageBox.critical(self, "Hata", f"Veritabanı hatası: {e}")
+            finally:
+                cursor.close()
+         
     # WIP - Bu fonksiyonu daha sonra düzenleyeceğim
     def add_film(self, film):
         # Create a new target

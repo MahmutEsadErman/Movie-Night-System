@@ -3,7 +3,7 @@ import sys
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PySide6.QtCore import QFile
-
+from Pages.CheckDavetliler import CheckDavetliler
 
 class MainMenu(QMainWindow):
     def __init__(self, parent=None, db_connection=None, kullanici_id=None):
@@ -26,6 +26,17 @@ class MainMenu(QMainWindow):
         self.ui.new_room_btn.clicked.connect(self.add_event)
         self.ui.join_btn.clicked.connect(self.join_event)
         self.ui.exit_btn.clicked.connect(lambda: self.parent.goto_page(self.parent.loginWindow))
+
+        # Start the davetliler check thread
+        self.check_davetliler_thread = CheckDavetliler(self.db_connection, self.kullanici_id)
+        self.check_davetliler_thread.result_signal.connect(self.handle_davetliler_check)
+        self.check_davetliler_thread.start()
+    
+    def handle_davetliler_check(self, found, event_ids):
+        if found:
+            # Display the list of events the user is invited to
+            event_ids_str = ", ".join(map(str, event_ids))
+            QMessageBox.information(self, "Davetler", f"Bir etkinlikte davetlisiniz! Etkinlik ID'leri: {event_ids_str}")
 
     
     def add_event(self):
