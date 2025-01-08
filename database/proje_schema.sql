@@ -3,7 +3,7 @@ CREATE TABLE kullanici (
   fname    varchar(15) not null, 
   lname    varchar(15) not null,
   k_id     serial PRIMARY KEY,
-  email  varchar(50),
+  email  varchar(50) UNIQUE,
   sifre_hash varchar(100)
 );
 
@@ -56,6 +56,14 @@ CREATE TABLE e_film_liste (
   foreign key (f_idf) references filmler(f_id)
 );
 
+CREATE TABLE davetliler (
+  e_idnum integer,
+  k_idnum smallint,
+  primary key (e_idnum,k_idnum),
+  foreign key (e_idnum) references etkinlik(e_id),
+  foreign key (k_idnum) references kullanici(k_id)
+);
+
 CREATE OR REPLACE FUNCTION prevent_extra_films()
 RETURNS TRIGGER AS $$
 DECLARE 
@@ -76,17 +84,21 @@ BEFORE INSERT ON e_film_liste
 FOR EACH ROW
 EXECUTE FUNCTION prevent_extra_films();
 
-CREATE OR REPLACE FUNCTION prevent_kurucu_silimi()
+CREATE OR REPLACE FUNCTION kurucu_silimi()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF EXISTS (SELECT 1 from etkinlik where kurucu_id=OLD.k_id )  THEN
-        RAISE EXCEPTION 'Aktif etkinliğiniz devam ederken hesabınızı silemezsiniz!';
+    IF EXISTS (SELECT 1 FROM etkinlik WHERE kurucu_id = OLD.k_idnum AND e_id = OLD.e_idnum) THEN
+        DELETE FROM katilimci WHERE e_idnum = OLD.e_idnum;
+		DELETE FROM e_film_liste WHERE e_idf = OLD.e_idnum;
+		DELETE FROM davetliler WHERE e_idnum = OLD.e_idnum;
+        DELETE FROM etkinlik WHERE e_id = OLD.e_idnum AND kurucu_id = OLD.k_idnum;
     END IF;
-    RETURN OLD; 
+
+    RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER kurucu_silemez
-BEFORE DELETE ON kullanici
+CREATE OR REPLACE TRIGGER kurucu_exit
+AFTER DELETE ON katilimci
 FOR EACH ROW
-EXECUTE FUNCTION prevent_kurucu_silimi();
+EXECUTE FUNCTION kurucu_silimi();

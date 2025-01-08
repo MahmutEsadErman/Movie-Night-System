@@ -10,10 +10,11 @@ from Pages.Trailer import TrailerWidget
 
 
 class FilmSearch(QDialog):
-    def __init__(self, parent=None, db_connection=None):
+    def __init__(self, parent=None, db_connection=None, event_id=None):
         super().__init__(parent)
         self.parent = parent
         self.db_connection = db_connection
+        self.event_id = event_id
         # Load the ui file
         if __name__ == "__main__":
             ui_file_name = "../uifolder/FilmSearch.ui"
@@ -56,7 +57,57 @@ class FilmSearch(QDialog):
 
     # WIP - Bu fonksiyonu daha sonra düzenleyeceğiz
     def search(self):
-        pass
+        
+        # Kullanıcının arama çubuğuna yazdığı metni alın
+        search_text = self.ui.search_le.text()
+
+        # SQL sorgusunu oluşturun
+        query = """
+            SELECT f_id, f_adi, f_resim, fragman_url 
+            FROM filmler
+            WHERE f_adi LIKE %s
+        """
+        try:
+            # Eski filmleri temizle
+            for i in reversed(range(self.filmsWidget.layout().count())):
+                widget = self.filmsWidget.layout().itemAt(i).widget()
+                if widget:
+                    widget.deleteLater()
+
+            self.films = {}
+            self.films_no = 0
+            self.row = 0
+            self.column = 0
+
+            cursor = self.db_connection.cursor()
+            # '%search_text%' ile arama yapın
+            cursor.execute(query, (f"%{search_text}%",))
+            films = cursor.fetchall()
+
+            # Filmleri ekleyin
+            for film in films:
+                f_id, f_adi, f_resim, fragman_url = film
+                byte_array = QByteArray(bytes(f_resim))
+                # Create QImage from QByteArray
+                image = QImage()
+                image.loadFromData(byte_array)
+
+                # Oyları sorgula
+                vote_query = """
+                SELECT oylar
+                FROM e_film_liste
+                WHERE f_idf = %s
+                """
+                cursor.execute(vote_query, (f_id,))
+                vote = cursor.fetchone()
+
+                # Filmi ekle
+                self.add_film(image, f_adi, fragman_url, f_id, vote)
+                
+        except Exception as e:
+            print(f"Error searching films: {e}")
+        finally:
+            cursor.close()
 
     # WIP - Bu fonksiyonu daha sonra düzenleyeceğiz
     def initialize_films(self):
@@ -78,7 +129,16 @@ class FilmSearch(QDialog):
                 # Create QImage from QByteArray
                 image = QImage()
                 image.loadFromData(byte_array)
-                self.add_film(image, f_adi, fragman_url)
+
+                vote_query = """
+                SELECT oylar
+                FROM e_film_liste
+                WHERE f_idf = %s
+                """
+                cursor.execute(vote_query, (f_id,))
+                vote = cursor.fetchone()
+
+                self.add_film(image, f_adi, fragman_url, f_id, vote)
 
         except Exception as e:
             print(f"Error loading films: {e}")
@@ -92,11 +152,10 @@ class FilmSearch(QDialog):
         #    self.add_film(QImage("database/deneme.jpg"), "ayı filmi", paul_url)
 
     # WIP - Bu fonksiyonu daha sonra düzenleyeceğim
-    def add_film(self, image, name, url):
+    def add_film(self, image, name, url, id, vote):
         # Create a new target
         self.films_no += 1
-        self.films[self.films_no] = {"image": image, "name": name, "vote_no": 0, "url": url}
-
+        self.films[self.films_no] = {"image": image, "name": name, "vote_no": vote[0], "url": url, "id": id}
         # Create a container widget for the target
         film_box = self.create_film_box(f"film{self.films_no}", QPixmap.fromImage(image), name)
 
@@ -131,9 +190,9 @@ class FilmSearch(QDialog):
         layout.addWidget(name_label)
 
         # Create the text label
-        vote_label = QLabel(str(0))
-        vote_label.setAlignment(Qt.AlignCenter | Qt.AlignCenter)
-        layout.addWidget(vote_label)
+        #vote_label = QLabel(str(0))
+        #vote_label.setAlignment(Qt.AlignCenter | Qt.AlignCenter)
+        #layout.addWidget(vote_label)
 
         # Set click event for container
         film_box.installEventFilter(self)
