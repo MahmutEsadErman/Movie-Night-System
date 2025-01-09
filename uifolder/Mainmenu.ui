@@ -18,6 +18,11 @@
 	background-color: rgb(39, 44, 54);
 }
 
+QWidget#widget{
+	border-radius: 10px;
+	background-color: rgba(37, 55, 67, 90);
+}
+
 QLineEdit{
 	min-height: 45px;
 	border-radius: 20px;
@@ -54,8 +59,142 @@ QLabel{
 </string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="1">
+    <widget class="QScrollArea" name="invitation_sa">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>500</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+QScrollArea{
+	margin-left: 20px;
+	margin-top: 25px;
+	background-color: rgb(39, 44, 54);
+	border-radius: 20px;
+}
+
+
+
+QLineEdit{
+	margin-left: 50px;
+	min-height: 45px;
+	border-radius: 20px;
+	background-color: #FFFFFF;
+	padding-left: 20px;
+	color: rgb(31, 53, 94);
+}
+
+QLineEdit:hover{
+	border: 2px solid rgb(139, 142, 139);
+}
+
+QPushButton{
+	margin-left: 60px;
+	margin-right: 60px;
+	min-height: 45px;
+	border-radius: 20px;
+	background-color: rgb(44, 66, 81);
+	color: #FFFFFF;
+}
+
+QPushButton:hover{
+	border: 2px solid rgb(255, 255, 255);
+}
+
+QCheckBox{
+	font-size: 10px;
+	color: #FFFFFF;
+}
+
+QLabel{
+	color: rgb(95, 94, 108);
+}
+
+
+</string>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="widget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>150</width>
+        <height>486</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QWidget{
+	margin-up: 100px;
+	margin-down: 200px;
+}
+
+QLineEdit{
+	margin-left: 50px;
+	min-height: 45px;
+	border-radius: 20px;
+	background-color: #FFFFFF;
+	padding-left: 20px;
+	color: rgb(31, 53, 94);
+}
+
+QLineEdit:hover{
+	border: 2px solid rgb(139, 142, 139);
+}
+
+QPushButton{
+	margin-left: 60px;
+	margin-right: 60px;
+	min-height: 45px;
+	border-radius: 20px;
+	background-color: rgb(44, 66, 81);
+	color: #FFFFFF;
+}
+
+QPushButton:hover{
+	border: 2px solid rgb(255, 255, 255);
+}
+
+QCheckBox{
+	font-size: 10px;
+	color: #FFFFFF;
+}
+
+QLabel{
+	color:rgb(255, 255, 255);
+}
+
+
+</string>
+      </property>
+     </widget>
+    </widget>
+   </item>
    <item row="0" column="0">
     <widget class="QFrame" name="menu_frame">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="minimumSize">
       <size>
        <width>450</width>
@@ -279,144 +418,6 @@ QLabel{
          </size>
         </property>
        </spacer>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QFrame" name="friends_frame">
-     <property name="styleSheet">
-      <string notr="true">QFrame{
-	border-radius: 20px;
-}</string>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::Shape::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Shadow::Raised</enum>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QLabel" name="label">
-        <property name="minimumSize">
-         <size>
-          <width>100</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Arkadaşlar&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QScrollArea" name="users_scrollarea">
-        <property name="styleSheet">
-         <string notr="true">QScrollArea{
-	background-color: rgb(39, 44, 54);
-	margin-left: 30px;
-	margin-right: 30px;
-	border-radius: 20px;
-}
-
-QWidget#widget{
-	border-radius: 20px;
-	background-color: rgba(45, 65, 72, 120);
-}
-
-QLineEdit{
-	margin-left: 50px;
-	min-height: 45px;
-	border-radius: 20px;
-	background-color: #FFFFFF;
-	padding-left: 20px;
-	color: rgb(31, 53, 94);
-}
-
-QLineEdit:hover{
-	border: 2px solid rgb(139, 142, 139);
-}
-
-QPushButton{
-	margin-left: 60px;
-	margin-right: 60px;
-	min-height: 45px;
-	border-radius: 20px;
-	background-color: rgb(44, 66, 81);
-	color: #FFFFFF;
-}
-
-QPushButton:hover{
-	border: 2px solid rgb(255, 255, 255);
-}
-
-QCheckBox{
-	font-size: 10px;
-	color: #FFFFFF;
-}
-
-QLabel{
-	color: rgb(95, 94, 108);
-}
-
-
-</string>
-        </property>
-        <property name="widgetResizable">
-         <bool>true</bool>
-        </property>
-        <widget class="QWidget" name="widget">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>151</width>
-           <height>432</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">
-QLineEdit{
-	margin-left: 50px;
-	min-height: 45px;
-	border-radius: 20px;
-	background-color: #FFFFFF;
-	padding-left: 20px;
-	color: rgb(31, 53, 94);
-}
-
-QLineEdit:hover{
-	border: 2px solid rgb(139, 142, 139);
-}
-
-QPushButton{
-	margin-left: 60px;
-	margin-right: 60px;
-	min-height: 45px;
-	border-radius: 20px;
-	background-color: rgb(44, 66, 81);
-	color: #FFFFFF;
-}
-
-QPushButton:hover{
-	border: 2px solid rgb(255, 255, 255);
-}
-
-QCheckBox{
-	font-size: 10px;
-	color: #FFFFFF;
-}
-
-QLabel{
-	color:rgb(255, 255, 255);
-}
-
-
-</string>
-         </property>
-        </widget>
-       </widget>
       </item>
      </layout>
     </widget>

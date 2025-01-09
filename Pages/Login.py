@@ -4,6 +4,8 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PySide6.QtCore import QFile
 
+from Pages.UpdateData import UpdateData
+
 
 class LoginWindow(QMainWindow):
     def __init__(self, parent=None, db_connection=None):
@@ -34,6 +36,10 @@ class LoginWindow(QMainWindow):
             self.k_id = k_id
             self.parent.mainmenu.kullanici_id = k_id
             self.parent.goto_page(self.parent.mainmenu)
+            # Initialize the update_data thread
+            self.parent.data_thread.kullanici_id = k_id
+            self.parent.data_thread.start()
+
 
         else:
             QMessageBox.warning(self, "Hata", "E-Posta veya şifre yanlış!")
@@ -68,7 +74,6 @@ class LoginWindow(QMainWindow):
         finally:
             cursor.close()
 
-        
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

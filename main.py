@@ -1,4 +1,5 @@
 import sys
+
 import psycopg2
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QStackedWidget, QMessageBox
@@ -7,6 +8,7 @@ from Pages.Login import LoginWindow
 from Pages.Register import RegisterWindow
 from Pages.MainMenu import MainMenu
 from Pages.RoomPage import RoomPage
+from Pages.UpdateData import UpdateData
 
 
 class MainWindow(QMainWindow):
@@ -57,6 +59,10 @@ class MainWindow(QMainWindow):
 
         # Add Stacked Widget to the layout
         self.setCentralWidget(self.stackedWidget)
+
+        # Update Data Thread
+        self.data_thread = UpdateData(self, self.db_connection, self.k_adi)
+        self.data_thread.data_updated.connect(self.mainmenu.add_invitation)
 
     def goto_page(self, window):
         self.stackedWidget.setCurrentWidget(window)
