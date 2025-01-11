@@ -64,6 +64,7 @@ class MainWindow(QMainWindow):
         self.data_thread = UpdateData(self, self.db_connection, self.k_adi,self.event_id)
         self.data_thread.data_updated.connect(self.mainmenu.add_invitation)
         self.data_thread.film_load.connect(self.roomPage.load_film_for_event)
+        self.data_thread.film_update.connect(self.roomPage.update_films)
     def goto_page(self, window):
         self.stackedWidget.setCurrentWidget(window)
 

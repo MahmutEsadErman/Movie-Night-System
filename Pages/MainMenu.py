@@ -27,7 +27,7 @@ class MainMenu(QMainWindow):
 
         # Button functions
         self.ui.new_room_btn.clicked.connect(self.add_event)
-        self.ui.join_btn.clicked.connect(lambda: self.join_event(self.ui.room_id_le.text()))
+        self.ui.join_btn.clicked.connect(lambda: self.join_event(self.ui.room_id_le.text(), False))
         self.ui.exit_btn.clicked.connect(lambda: self.parent.goto_page(self.parent.loginWindow))
 
         # Set Widget inside Film Scroll Area
@@ -72,8 +72,8 @@ class MainMenu(QMainWindow):
             self.parent.roomPage.event_id = event_id
             self.parent.data_thread.event_id = event_id
             self.parent.goto_page(self.parent.roomPage)
-
-    def join_event(self, room_id):
+    
+    def join_event(self, room_id, is_invitation=False):
 
         try:
             # Veritabanında room_id kontrolü
@@ -94,6 +94,8 @@ class MainMenu(QMainWindow):
                 """
                 cursor.execute(insert_katilimci_query, (room_id, self.kullanici_id))
                 self.db_connection.commit()
+                if is_invitation:
+                    self.delete_invitation(room_id)
 
                 # Oda bulunduysa, ilgili odaya geçiş yap
                 self.parent.roomPage.kullanici_id = self.kullanici_id
@@ -121,11 +123,12 @@ class MainMenu(QMainWindow):
         # Create a container widget for the target
         invitation_box = self.create_invitation_box(room_id)
 
-        # Add the film_box widget to the grid layout
+        # Add the invitation_box widget to the grid layout
         self.invitation_widget.layout().addWidget(invitation_box)
 
     def create_invitation_box(self, room_id):
         inv_box = QWidget(objectName="oda"+str(room_id), styleSheet="QWidget#oda"+str(room_id)+"{background-color: #2c3a50; border-radius: 10px;}")
+        inv_box.setProperty("room_id", room_id)
         layout = QVBoxLayout()
         inv_box.setLayout(layout)
         layout.addWidget(QLabel(f"Oda ID: {room_id}", alignment=Qt.AlignCenter, styleSheet="color: white;"))
@@ -134,7 +137,7 @@ class MainMenu(QMainWindow):
         btn_frame.setLayout(QHBoxLayout())
         join_btn = QPushButton(text="Katıl", styleSheet="margin: 3px;")
         join_btn.setMinimumSize(80, 20)
-        join_btn.clicked.connect(lambda: self.join_event(room_id))
+        join_btn.clicked.connect(lambda: self.join_event(room_id,True))
         btn_frame.layout().addWidget(join_btn)
         delete_btn = QPushButton(text="Sil", styleSheet="margin: 3px;")
         delete_btn.setMinimumSize(50, 20)
@@ -145,10 +148,41 @@ class MainMenu(QMainWindow):
         layout.addWidget(btn_frame)
 
         return inv_box
-        
-    def delete_invitation(self, room_id):
+
+    def remove_invitation(self, room_id):
+        # Check if the room_id exists in the list
+        if room_id not in self.room_list:
+            return
+
+        print("Removing invitation from the list")
         self.room_list.remove(room_id)
 
+        # Iterate over all widgets in the layout to find the one with the given room_id
+        layout = self.invitation_widget.layout()
+        for i in range(layout.count()):
+            widget = layout.itemAt(i).widget()
+            if widget is not None and widget.property("room_id") == room_id:
+                # Remove the widget from the layout
+                layout.takeAt(i)
+                widget.deleteLater()  # Delete the widget to free up memory
+                break
+        
+    def delete_invitation(self, room_id):
+        self.remove_invitation(room_id)
+        try:
+            
+            cursor = self.db_connection.cursor()
+            query = """
+                Delete from davetliler
+                where e_idnum = %s;
+            """
+            cursor.execute(query, (room_id,))
+            self.db_connection.commit()
+        except Exception as e:
+            print(f"Error deleting invitation: {e}")
+
+        finally:
+            cursor.close()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

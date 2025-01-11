@@ -37,6 +37,7 @@ class RoomPage(QMainWindow):
         self.db_connection = db_connection
         self.kullanici_id = kullanici_id
         self.event_id = event_id
+        self.film_widgets = {}
         # Load the ui file
         if __name__ == "__main__":
             ui_file_name = "../uifolder/Room.ui"
@@ -110,7 +111,11 @@ class RoomPage(QMainWindow):
                 QMessageBox.critical(self, "Hata", f"Veritabanı hatası: {e}")
             finally:
                 cursor.close()
-    
+    def update_films(self, films):
+        for film in films:
+            film_id, vote_count = film
+            self.film_widgets[film_id].layout().itemAt(2).widget().setText(str(vote_count))
+
     def load_film_for_event(self, films):   
         for film in films:     
             f_id, f_adi, f_resim, fragman_url, oylar = film
@@ -211,6 +216,7 @@ class RoomPage(QMainWindow):
         # Create a container widget for the target
         film_box = self.create_film_box(f"film{self.films_no}", QPixmap.fromImage(film["image"]), film["name"], vote_count=film["vote_no"])
 
+        self.film_widgets[film["id"]] = film_box
         # Add the film_box widget to the grid layout
         self.filmsWidget.layout().addWidget(film_box, self.row, self.column)
 
@@ -295,8 +301,7 @@ class RoomPage(QMainWindow):
             if event.type() == QEvent.MouseButtonDblClick:
                 no = int(obj.objectName().lstrip("film"))
                 dialog = TrailerWidget(db_connection=self.db_connection, url=self.films[no]["url"], oy=True, event_id=self.event_id, f_id=self.films[no]["id"])
-                if dialog.exec() == QDialog.Accepted:
-                    self.vote_film(no)
+                dialog.exec() 
 
         # When clicked change the border color
         if event.type() == QEvent.MouseButtonPress:
