@@ -1,8 +1,16 @@
+
+CREATE SEQUENCE seq_id
+    START 1
+    INCREMENT 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
 --DROP TABLE kullanici;
 CREATE TABLE kullanici (
   fname    varchar(15) not null, 
   lname    varchar(15) not null,
-  k_id     serial PRIMARY KEY,
+  k_id     INTEGER DEFAULT nextval('seq_id') PRIMARY KEY,
   email  varchar(50) UNIQUE,
   sifre_hash varchar(100)
 );

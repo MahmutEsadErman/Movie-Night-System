@@ -70,6 +70,7 @@ class MainMenu(QMainWindow):
             cursor.close()
             self.parent.roomPage.kullanici_id = self.kullanici_id
             self.parent.roomPage.event_id = event_id
+            self.parent.data_thread.event_id = event_id
             self.parent.goto_page(self.parent.roomPage)
 
     def join_event(self, room_id):
@@ -97,6 +98,7 @@ class MainMenu(QMainWindow):
                 # Oda bulunduysa, ilgili odaya geçiş yap
                 self.parent.roomPage.kullanici_id = self.kullanici_id
                 self.parent.roomPage.event_id = room_id
+                self.parent.data_thread.event_id = room_id
                 self.parent.goto_page(self.parent.roomPage)  # Oda sayfasına geçiş
             else:
 
@@ -137,12 +139,15 @@ class MainMenu(QMainWindow):
         delete_btn = QPushButton(text="Sil", styleSheet="margin: 3px;")
         delete_btn.setMinimumSize(50, 20)
         delete_btn.clicked.connect(lambda: inv_box.deleteLater())
-        delete_btn.clicked.connect(lambda: self.room_list.remove(room_id))
+        delete_btn.clicked.connect(lambda: self.delete_invitation(room_id))
         btn_frame.layout().addWidget(delete_btn)
 
         layout.addWidget(btn_frame)
 
         return inv_box
+        
+    def delete_invitation(self, room_id):
+        self.room_list.remove(room_id)
 
 
 if __name__ == "__main__":

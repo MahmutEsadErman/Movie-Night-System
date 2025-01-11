@@ -100,7 +100,8 @@ class FilmSearch(QDialog):
                 """
                 cursor.execute(vote_query, (f_id,))
                 vote = cursor.fetchone()
-
+                if vote is None:
+                    vote = (0,)
                 # Filmi ekle
                 self.add_film(image, f_adi, fragman_url, f_id, vote)
                 
@@ -137,7 +138,8 @@ class FilmSearch(QDialog):
                 """
                 cursor.execute(vote_query, (f_id,))
                 vote = cursor.fetchone()
-
+                if vote is None:
+                    vote = (0,)
                 self.add_film(image, f_adi, fragman_url, f_id, vote)
 
         except Exception as e:
