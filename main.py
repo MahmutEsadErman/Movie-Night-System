@@ -17,9 +17,9 @@ class MainWindow(QMainWindow):
 
         try:
             self.db_connection = psycopg2.connect(
-                dbname="movienight_db",
+                dbname="movnie",
                 user="postgres",
-                password="kitel56",
+                password="halil123",
                 host="localhost",
                 port="5432"
             )

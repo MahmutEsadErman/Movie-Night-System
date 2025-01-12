@@ -53,8 +53,8 @@ class LoginWindow(QMainWindow):
             cursor = self.db_connection.cursor()
 
             query = """
-                SELECT email, sifre_hash, k_id 
-                FROM kullanici 
+                SELECT email, sifre_hash, k_id  
+                FROM kullanici_view 
                 WHERE email = %s AND sifre_hash = %s
             """
 

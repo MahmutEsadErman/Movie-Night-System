@@ -58,9 +58,9 @@ CREATE TABLE katilimci (
 CREATE TABLE e_film_liste (
   e_idf   smallint,
   f_idf   smallint,
-  oylar   smallint,
+  oylar   smallint CHECK (oylar <= 10),
   primary key (e_idf,f_idf),
-  foreign key (e_idf) references etkinlik(e_id),
+  foreign key (e_idf) references etkinlik(e_id) ON DELETE CASCADE,
   foreign key (f_idf) references filmler(f_id)
 );
 
@@ -80,15 +80,15 @@ BEGIN
 	SELECT count(*) into my_count
 	from e_film_liste as e
 	where e.e_idf = NEW.e_idf;
-    IF my_count >= 12 THEN
-        RAISE EXCEPTION 'Maalesef maksimum film sayısı olan 12ye ulaşıldı! ,önerinizi alamıyoruz';
+    IF my_count >= 5 THEN
+        RAISE EXCEPTION 'Maalesef maksimum film sayısı olan 5e ulaşıldı';
     END IF;
     RAISE NOTICE 'Film eklendi';
-    RETURN NEW; -- Güncellemeye devam etmek için NEW döndürülmeli
+    RETURN NEW; 
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER max_12_film
+CREATE TRIGGER max_5_film
 BEFORE INSERT ON e_film_liste
 FOR EACH ROW
 EXECUTE FUNCTION prevent_extra_films();
@@ -97,10 +97,9 @@ CREATE OR REPLACE FUNCTION kurucu_silimi()
 RETURNS TRIGGER AS $$
 BEGIN
     IF EXISTS (SELECT 1 FROM etkinlik WHERE kurucu_id = OLD.k_idnum AND e_id = OLD.e_idnum) THEN
-        DELETE FROM katilimci WHERE e_idnum = OLD.e_idnum;
-		DELETE FROM e_film_liste WHERE e_idf = OLD.e_idnum;
-		DELETE FROM davetliler WHERE e_idnum = OLD.e_idnum;
-        DELETE FROM etkinlik WHERE e_id = OLD.e_idnum AND kurucu_id = OLD.k_idnum;
+      DELETE FROM katilimci WHERE e_idnum = OLD.e_idnum;
+		  DELETE FROM davetliler WHERE e_idnum = OLD.e_idnum;
+      DELETE FROM etkinlik WHERE e_id = OLD.e_idnum AND kurucu_id = OLD.k_idnum;
     END IF;
     RAISE NOTICE 'Katılımcı silindi';
     RETURN NULL;
@@ -111,3 +110,9 @@ CREATE OR REPLACE TRIGGER kurucu_exit
 AFTER DELETE ON katilimci
 FOR EACH ROW
 EXECUTE FUNCTION kurucu_silimi();
+
+
+CREATE OR REPLACE VIEW kullanici_view AS
+SELECT email, sifre_hash, k_id
+FROM kullanici;
+
