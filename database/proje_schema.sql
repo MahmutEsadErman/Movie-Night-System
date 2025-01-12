@@ -31,20 +31,6 @@ CREATE TABLE filmler (
   primary key (f_id)
 );
 
-INSERT INTO filmler (f_id, f_adi, f_resim, fragman_url)
-VALUES 
-(1, 'Inception', pg_read_binary_file('images\Inception.jpg'), 'https://www.youtube.com/embed/YoHD9XEInc0?si=zlMwPIfpL6Md2HzP'),
-(2, 'The Matrix', pg_read_binary_file('images\The Matrix.jpg'), 'https://www.youtube.com/embed/vKQi3bBA1y8?si=bJG8Qna4HVJ04L45'),
-(3, 'The Dark Knight', pg_read_binary_file('images\The Dark Knight.jpeg'), 'https://www.youtube.com/embed/EXeTwQWrcwY?si=iqoizCT4um9brICL'),
-(4, 'Interstellar',pg_read_binary_file('images\Interstellar.jpeg'), 'https://www.youtube.com/embed/zSWdZVtXT7E?si=Pnryotchw0JI6R9H'),
-(5, 'Shutter Island',pg_read_binary_file('images\Shutter Island.jpg'), 'https://www.youtube.com/embed/v8yrZSkKxTA?si=FoYVy5TP7q0X4sKM'),
-(6, 'Fight Club',pg_read_binary_file('images\Fight Club.jpeg'), 'https://www.youtube.com/embed/SUXWAEX2jlg?si=d18WJTefZrkubZLy'),
-(7, 'Braveheart',pg_read_binary_file('images\Braveheart.jpeg'), 'https://www.youtube.com/embed/1NJO0jxBtMo?si=REWxrM1xS6X-OKod'),
-(8, 'Whiplash',pg_read_binary_file('images\Whiplash.jpg'), 'https://www.youtube.com/embed/7d_jQycdQGo?si=ly-VkvoI3_63z59Y'),
-(9, 'The Godfather',pg_read_binary_file('images\The Godfather.jpg'), 'https://www.youtube.com/embed/sY1S34973zA?si=mRxNVNvpIhNsAMdg'),
-(10, 'Gladiator',pg_read_binary_file('images\Gladiator.jpg'), 'https://www.youtube.com/embed/P5ieIbInFpg?si=loU1wqBjEEKKpZO9');
-
-
 --DROP TABLE katilimci;
 CREATE TABLE katilimci (
   e_idnum integer,
@@ -125,3 +111,72 @@ CREATE OR REPLACE VIEW film_view AS
 SELECT f_id, f_adi, f_resim, fragman_url 
 FROM filmler;
 
+INSERT INTO kullanici (fname, lname, email, sifre_hash)
+VALUES
+('Ahmet', 'Yılmaz', 'ahmet.yilmaz@example.com', 'Ahmet2025'),
+('Ayşe', 'Kaya', 'ayse.kaya@example.com', 'Ayse2025'),
+('Mehmet', 'Demir', 'mehmet.demir@example.com', 'Mehmet2025'),
+('Fatma', 'Şahin', 'fatma.sahin@example.com', 'Fatma2025'),
+('Ali', 'Çelik', 'ali.celik@example.com', 'Ali2025'),
+('Zeynep', 'Acar', 'zeynep.acar@example.com', 'Zeynep2025'),
+('Hüseyin', 'Kaya', 'huseyin.kaya@example.com', 'Huseyin2025'),
+('Emine', 'Demir', 'emine.demir@example.com', 'Emine2025'),
+('Hasan', 'Aydın', 'hasan.aydin@example.com', 'Hasan2025'),
+('Elif', 'Çetin', 'elif.cetin@example.com', 'Elif2025');
+
+INSERT INTO filmler (f_id, f_adi, f_resim, fragman_url)
+VALUES 
+(1, 'Inception', pg_read_binary_file('images\Inception.jpg'), 'https://www.youtube.com/embed/YoHD9XEInc0?si=zlMwPIfpL6Md2HzP'),
+(2, 'The Matrix', pg_read_binary_file('images\The Matrix.jpg'), 'https://www.youtube.com/embed/vKQi3bBA1y8?si=bJG8Qna4HVJ04L45'),
+(3, 'The Dark Knight', pg_read_binary_file('images\The Dark Knight.jpeg'), 'https://www.youtube.com/embed/EXeTwQWrcwY?si=iqoizCT4um9brICL'),
+(4, 'Interstellar',pg_read_binary_file('images\Interstellar.jpeg'), 'https://www.youtube.com/embed/zSWdZVtXT7E?si=Pnryotchw0JI6R9H'),
+(5, 'Shutter Island',pg_read_binary_file('images\Shutter Island.jpg'), 'https://www.youtube.com/embed/v8yrZSkKxTA?si=FoYVy5TP7q0X4sKM'),
+(6, 'Fight Club',pg_read_binary_file('images\Fight Club.jpeg'), 'https://www.youtube.com/embed/SUXWAEX2jlg?si=d18WJTefZrkubZLy'),
+(7, 'Braveheart',pg_read_binary_file('images\Braveheart.jpeg'), 'https://www.youtube.com/embed/1NJO0jxBtMo?si=REWxrM1xS6X-OKod'),
+(8, 'Whiplash',pg_read_binary_file('images\Whiplash.jpg'), 'https://www.youtube.com/embed/7d_jQycdQGo?si=ly-VkvoI3_63z59Y'),
+(9, 'The Godfather',pg_read_binary_file('images\The Godfather.jpg'), 'https://www.youtube.com/embed/sY1S34973zA?si=mRxNVNvpIhNsAMdg'),
+(10, 'Gladiator',pg_read_binary_file('images\Gladiator.jpg'), 'https://www.youtube.com/embed/P5ieIbInFpg?si=loU1wqBjEEKKpZO9');
+
+INSERT INTO etkinlik (kurucu_id)
+VALUES
+(1),
+(2),
+
+INSERT INTO katilimci (e_idnum, k_idnum)
+VALUES
+(1, 1),
+(1, 4),
+(1, 6),
+(1, 8),
+(1, 10),
+(2, 2),
+(2, 3),
+(2, 5),
+(2, 7),
+(2, 9),
+
+INSERT INTO e_film_liste (e_idf, f_idf, oylar)
+VALUES
+(1, 1, 0),
+(1, 3, 0),
+(1, 5, 0),
+(1, 7, 0),
+(1, 9, 0),
+(2, 2, 0),
+(2, 4, 0),
+(2, 6, 0),
+(2, 8, 0),
+(2, 10, 0);
+
+INSERT INTO davetliler (e_idnum, k_idnum)
+VALUES
+(1, 2),
+(1, 3),
+(1, 5),
+(1, 7),
+(1, 9),
+(2, 1),
+(2, 4),
+(2, 6),
+(2, 8),
+(2, 10);
