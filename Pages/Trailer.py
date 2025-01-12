@@ -48,7 +48,6 @@ class TrailerWidget(QDialog):
 
     def on_button_click(self):
         if self.oy:
-
             cursor = self.db_connection.cursor()
             try:
                 cursor.execute("""

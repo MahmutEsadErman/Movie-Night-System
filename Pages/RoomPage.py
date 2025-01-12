@@ -9,9 +9,6 @@ from PySide6.QtCore import QFile, Qt, QEvent, QByteArray
 from Pages.FilmSearch import FilmSearch
 from Pages.Trailer import TrailerWidget
 
-from io import BytesIO
-
-
 def create_circular_image_label(pixmap, size):
     # Create a circular mask
     mask = QPixmap(size, size)
@@ -31,7 +28,7 @@ def create_circular_image_label(pixmap, size):
 
 
 class RoomPage(QMainWindow):
-    def __init__(self, parent=None, db_connection=None, kullanici_id= None, event_id = None):
+    def __init__(self, parent=None, db_connection=None, kullanici_id=None, event_id=None):
         super().__init__(parent)
         self.parent = parent
         self.db_connection = db_connection
@@ -86,7 +83,6 @@ class RoomPage(QMainWindow):
         film = new_dialog.exec()
         if film:
 
-
             cursor = self.db_connection.cursor()
             try:
                 # Seçilen filmi e_film_liste tablosuna ekle
@@ -95,39 +91,37 @@ class RoomPage(QMainWindow):
                 VALUES (%s, %s, %s);
                 """
 
-                cursor.execute(insert_query, (self.event_id, film["id"], 0))  
-                
+                cursor.execute(insert_query, (self.event_id, film["id"], 0))
+
                 if self.db_connection.notices:
                     for notice in self.db_connection.notices:
-                        print("NOTICE:", notice) # Veritabanından gelen noticeleri yazdır DÜZENLENMELİ
-
+                        print("NOTICE:", notice)  # Veritabanından gelen noticeleri yazdır DÜZENLENMELİ
 
                 self.db_connection.commit()
-                 # Film seçildiğinde, veritabanına kaydediyoruz
-                
+                # Film seçildiğinde, veritabanına kaydediyoruz
+
 
             except Exception as e:
                 self.db_connection.rollback()
                 QMessageBox.critical(self, "Hata", f"Veritabanı hatası: {e}")
             finally:
                 cursor.close()
+
     def update_films(self, films):
         for film in films:
             film_id, vote_count = film
             self.film_widgets[film_id].layout().itemAt(2).widget().setText(str(vote_count))
 
-    def load_film_for_event(self, films):   
-        for film in films:     
+    def load_film_for_event(self, films):
+        for film in films:
             f_id, f_adi, f_resim, fragman_url, oylar = film
             byte_array = QByteArray(bytes(f_resim))
             # Create QImage from QByteArray
             image = QImage()
             image.loadFromData(byte_array)
-            self.add_film({"image": image,"name": f_adi, "vote_no": oylar, "url": fragman_url, "id": f_id}) 
+            self.add_film({"image": image, "name": f_adi, "vote_no": oylar, "url": fragman_url, "id": f_id})
 
-    
     def exit(self):
-
         cursor = self.db_connection.cursor()
 
         try:
@@ -137,11 +131,10 @@ class RoomPage(QMainWindow):
             WHERE k_idnum = %s and e_idnum = %s;
             """
             cursor.execute(delete_participant_query, (self.kullanici_id, self.event_id))
-        
-            if self.db_connection.notices:
-                    for notice in self.db_connection.notices:
-                        print("NOTICE:", notice) # Veritabanından gelen noticeleri yazdır DÜZENLENMELİ
 
+            if self.db_connection.notices:
+                for notice in self.db_connection.notices:
+                    print("NOTICE:", notice)  # Veritabanından gelen noticeleri yazdır DÜZENLENMELİ
 
             self.db_connection.commit()
 
@@ -151,7 +144,6 @@ class RoomPage(QMainWindow):
 
         finally:
             cursor.close()
-
 
         self.clear_films()
 
@@ -171,10 +163,8 @@ class RoomPage(QMainWindow):
         self.row = 0
         self.column = 0
 
-
-    # WIP - Bu fonksiyonu daha sonra düzenleyeceğim
     def invite_friend(self):
-        msg , ok = QInputDialog.getText(self, "Invite", "Enter the email:")
+        msg, ok = QInputDialog.getText(self, "Invite", "Enter the email:")
         if ok:
             cursor = self.db_connection.cursor()
             try:
@@ -183,7 +173,7 @@ class RoomPage(QMainWindow):
                 SELECT k_id FROM kullanici WHERE email = %s;
                 """
 
-                cursor.execute(select_query, (msg,))  
+                cursor.execute(select_query, (msg,))
 
                 friend = cursor.fetchall()
                 if not friend:
@@ -200,13 +190,13 @@ class RoomPage(QMainWindow):
                 self.db_connection.commit()
                 # Add the user to the list
                 self.add_friend(QImage("database/esad.jpg"), "ahmet")
-                
+
             except Exception as e:
                 self.db_connection.rollback()
                 QMessageBox.critical(self, "Hata", f"Veritabanı hatası: {e}")
             finally:
                 cursor.close()
-         
+
     # WIP - Bu fonksiyonu daha sonra düzenleyeceğim
     def add_film(self, film):
         # Create a new target
@@ -300,10 +290,11 @@ class RoomPage(QMainWindow):
             # When double clicked open a new window
             if event.type() == QEvent.MouseButtonDblClick:
                 no = int(obj.objectName().lstrip("film"))
-                dialog = TrailerWidget(db_connection=self.db_connection, url=self.films[no]["url"], oy=True, event_id=self.event_id, f_id=self.films[no]["id"])
-                dialog.exec() 
+                dialog = TrailerWidget(db_connection=self.db_connection, url=self.films[no]["url"], oy=True,
+                                       event_id=self.event_id, f_id=self.films[no]["id"])
+                dialog.exec()
 
-        # When clicked change the border color
+                # When clicked change the border color
         if event.type() == QEvent.MouseButtonPress:
             if event.buttons() == Qt.LeftButton:
                 self.oldtarget.setStyleSheet(self.containerStyleSheet)

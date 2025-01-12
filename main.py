@@ -19,7 +19,7 @@ class MainWindow(QMainWindow):
             self.db_connection = psycopg2.connect(
                 dbname="movienight_db",
                 user="postgres",
-                password="yasir.2121",
+                password="kitel56",
                 host="localhost",
                 port="5432"
             )
@@ -61,12 +61,18 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.stackedWidget)
 
         # Update Data Thread
-        self.data_thread = UpdateData(self, self.db_connection, self.k_adi,self.event_id)
+        self.data_thread = UpdateData(self, self.db_connection, self.k_adi, self.event_id)
         self.data_thread.data_updated.connect(self.mainmenu.add_invitation)
         self.data_thread.film_load.connect(self.roomPage.load_film_for_event)
         self.data_thread.film_update.connect(self.roomPage.update_films)
+        self.data_thread.info_dialog.connect(self.info_dialog)
+        self.data_thread.exit_room.connect(self.roomPage.exit)
+
     def goto_page(self, window):
         self.stackedWidget.setCurrentWidget(window)
+
+    def info_dialog(self, message):
+        QMessageBox.information(self, "Bilgi", message)
 
 
 if __name__ == "__main__":

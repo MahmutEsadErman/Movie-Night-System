@@ -7,18 +7,22 @@ class UpdateData(QThread):
     data_updated = Signal(int)
     film_load = Signal(object)
     film_update = Signal(object)
+    info_dialog = Signal(str)
+    exit_room = Signal()
+
     def __init__(self, main, db_connection, kullanici_id, event_id):
         super().__init__()
         self.main = main
         self.db_connection = db_connection
         self.kullanici_id = kullanici_id
         self.event_id = event_id
+
     def run(self):
         print("Update data thread started!")
         loaded_films = set()  # Initialize as an empty set
         loaded_film_oys = {}
+
         while True:
-            print("Updating user data...")
             try:
                 cursor = self.db_connection.cursor()
 
@@ -37,8 +41,7 @@ class UpdateData(QThread):
                         for row in results:
                             print(f"Found event IDs: {row[0]}")
                             self.data_updated.emit(row[0])
-            
-                    
+
                 elif self.main.stackedWidget.currentWidget() == self.main.roomPage:
                     check_query = """
                     SELECT 1
@@ -48,8 +51,8 @@ class UpdateData(QThread):
                     cursor.execute(check_query, (self.event_id, self.kullanici_id))
                     result = cursor.fetchone()
                     if not result:
-                        self.main.goto_page(self.main.mainmenu)
-                        
+                        self.exit_room.emit()
+                        self.info_dialog.emit("Oda sahibi çıktığı için oda kapatıldı!")
                         continue
 
                     select_query = """
@@ -59,8 +62,6 @@ class UpdateData(QThread):
                     """
                     cursor.execute(select_query, (self.event_id,))
                     films = cursor.fetchall()
-
-                    
 
                     # List to hold films with updated `oy` values
                     new_films = []
@@ -75,14 +76,14 @@ class UpdateData(QThread):
                             loaded_films.add(film_id)  # Add the film ID to the set
                             loaded_film_oys[film_id] = oy_value
                             new_films.append(film)  # Add the film to updated list
-                            
+
                         elif loaded_film_oys[film_id] != oy_value:
                             loaded_film_oys[film_id] = oy_value  # Update the oy value
                             updated_films.append((film_id, oy_value))
 
                     if updated_films:
                         self.film_update.emit(updated_films)
-                            
+
                     # Emit all updated films in a single emit
                     if new_films:
                         self.film_load.emit(new_films)
