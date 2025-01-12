@@ -83,6 +83,7 @@ BEGIN
     IF my_count >= 12 THEN
         RAISE EXCEPTION 'Maalesef maksimum film sayısı olan 12ye ulaşıldı! ,önerinizi alamıyoruz';
     END IF;
+    RAISE NOTICE 'Film eklendi';
     RETURN NEW; -- Güncellemeye devam etmek için NEW döndürülmeli
 END;
 $$ LANGUAGE plpgsql;
@@ -101,7 +102,7 @@ BEGIN
 		DELETE FROM davetliler WHERE e_idnum = OLD.e_idnum;
         DELETE FROM etkinlik WHERE e_id = OLD.e_idnum AND kurucu_id = OLD.k_idnum;
     END IF;
-
+    RAISE NOTICE 'Katılımcı silindi';
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;

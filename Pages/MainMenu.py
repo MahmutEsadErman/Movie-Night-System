@@ -4,7 +4,7 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QWidget, QVBoxLayout, QLabel, QPushButton, \
     QHBoxLayout
 from PySide6.QtCore import QFile, Qt
-
+from PySide6.QtGui import QPixmap, QImage, QPainter, QPainterPath
 
 class MainMenu(QMainWindow):
     def __init__(self, parent=None, db_connection=None, kullanici_id=None):
@@ -71,6 +71,7 @@ class MainMenu(QMainWindow):
             self.parent.roomPage.kullanici_id = self.kullanici_id
             self.parent.roomPage.event_id = event_id
             self.parent.data_thread.event_id = event_id
+            self.parent.data_thread.kurucu_id = self.kullanici_id
             self.parent.goto_page(self.parent.roomPage)
     
     def join_event(self, room_id, is_invitation=False):
@@ -79,14 +80,14 @@ class MainMenu(QMainWindow):
             # Veritabanında room_id kontrolü
             cursor = self.db_connection.cursor()
             query = """
-                SELECT COUNT(*) 
+                SELECT kurucu_id 
                 FROM etkinlik 
                 WHERE e_id = %s
             """
             cursor.execute(query, (room_id,))
             result = cursor.fetchone()
 
-            if result and result[0] > 0:
+            if result is not None:
 
                 insert_katilimci_query = """
                 INSERT INTO katilimci (e_idnum, k_idnum)
@@ -101,6 +102,7 @@ class MainMenu(QMainWindow):
                 self.parent.roomPage.kullanici_id = self.kullanici_id
                 self.parent.roomPage.event_id = room_id
                 self.parent.data_thread.event_id = room_id
+                self.parent.data_thread.kurucu_id = result[0]
                 self.parent.goto_page(self.parent.roomPage)  # Oda sayfasına geçiş
             else:
 

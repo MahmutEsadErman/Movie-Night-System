@@ -68,6 +68,7 @@ class MainWindow(QMainWindow):
         self.data_thread.info_dialog.connect(self.info_dialog)
         self.data_thread.exit_room.connect(self.roomPage.exit)
 
+        self.data_thread.friend_update.connect(self.roomPage.update_friends)
     def goto_page(self, window):
         self.stackedWidget.setCurrentWidget(window)
 

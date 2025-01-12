@@ -35,6 +35,7 @@ class RoomPage(QMainWindow):
         self.kullanici_id = kullanici_id
         self.event_id = event_id
         self.film_widgets = {}
+        self.friends_widgets = {}
         # Load the ui file
         if __name__ == "__main__":
             ui_file_name = "../uifolder/Room.ui"
@@ -112,7 +113,7 @@ class RoomPage(QMainWindow):
             film_id, vote_count = film
             self.film_widgets[film_id].layout().itemAt(2).widget().setText(str(vote_count))
 
-    def load_film_for_event(self, films):
+    def load_film_for_event(self, films):   
         for film in films:
             f_id, f_adi, f_resim, fragman_url, oylar = film
             byte_array = QByteArray(bytes(f_resim))
@@ -123,7 +124,6 @@ class RoomPage(QMainWindow):
 
     def exit(self):
         cursor = self.db_connection.cursor()
-
         try:
             # Kullanıcıyı katılımcı tablosundan sil
             delete_participant_query = """
@@ -188,16 +188,14 @@ class RoomPage(QMainWindow):
                 cursor.execute(insert_query, (self.event_id, friend[0][0]))
 
                 self.db_connection.commit()
-                # Add the user to the list
-                self.add_friend(QImage("database/esad.jpg"), "ahmet")
-
+                
+                
             except Exception as e:
                 self.db_connection.rollback()
                 QMessageBox.critical(self, "Hata", f"Veritabanı hatası: {e}")
             finally:
                 cursor.close()
 
-    # WIP - Bu fonksiyonu daha sonra düzenleyeceğim
     def add_film(self, film):
         # Create a new target
         self.films_no += 1
@@ -224,7 +222,32 @@ class RoomPage(QMainWindow):
 
         # Add the container widget to the grid layout
         self.friendsWidget.layout().addWidget(friend_box, 0, self.friends_no)
+        self.friends_widgets[self.friends_no] = friend_box
         self.friends_no += 1
+
+    def delete_friend(self, friend_id):
+        if friend_id in self.friends:
+            # Get the friend widget from the friends dictionary
+            friend_widget = self.friends_widgets[friend_id]
+            
+            self.friendsWidget.layout().removeWidget(friend_widget)
+            friend_widget.deleteLater()
+      
+            del self.friends[friend_id]
+            
+            self.rearrange_widgets()
+
+    def rearrange_widgets(self):
+        # This function rearranges remaining widgets after a friend is deleted, if needed.
+        for i, friend_id in enumerate(self.friends):
+            friend_widget = self.friends[friend_id]["widget"]
+            self.friendsWidget.layout().addWidget(friend_widget, 0, i)
+
+    def update_friends(self, new_friends, deleted_friends):
+        for name in new_friends:
+            self.add_friend(QImage("database/images/dot.jpg"), name)
+        for friend_id in deleted_friends:
+            self.delete_friend(friend_id)
 
     def create_film_box(self, objectname, pixmap, name, vote_count=0):
         # Create a QWidget to hold both labels
