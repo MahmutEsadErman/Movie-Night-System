@@ -54,7 +54,7 @@ class LoginWindow(QMainWindow):
 
             query = """
                 SELECT email, sifre_hash, k_id  
-                FROM kullanici_view 
+                FROM kullanici
                 WHERE email = %s AND sifre_hash = %s
             """
 

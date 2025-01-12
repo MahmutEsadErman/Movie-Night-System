@@ -8,7 +8,6 @@ class UpdateData(QThread):
     film_load = Signal(object)
     film_update = Signal(object)
     info_dialog = Signal(str)
-    exit_room = Signal()
 
     friend_update = Signal(object, object)
     def __init__(self, main, db_connection, kullanici_id, event_id):
@@ -55,8 +54,8 @@ class UpdateData(QThread):
                     katilimcilar = cursor.fetchall()
                     
                     if (self.kullanici_id,) not in katilimcilar and self.kullanici_id != self.kurucu_id:
-                        self.exit_room.emit()
                         self.info_dialog.emit("Oda sahibi çıktığı için oda kapatıldı!")
+                        self.main.goto_page(self.main.mainmenu)
                         continue
                     if katilimcilar:
                         kullanici_query = """
@@ -76,17 +75,23 @@ class UpdateData(QThread):
                         new_katilimci_id = katilimcilar - loaded_friends
                         
                         new_katilimci = []
-
+                        
                         for katilimci in katilimci_isimleri:
                             if katilimci[0] in new_katilimci_id:
-                                new_katilimci.append(str(katilimci[1]) + " " + str(katilimci[2]))
-                                loaded_friends.add(katilimci[0])
+                                new_katilimci.append((str(katilimci[1]) + " " + str(katilimci[2]),katilimci[0]))
+                        
                     else:
                         katilimcilar = set()
                         new_katilimci = []
+
                     deleted_katilimci_id = loaded_friends - katilimcilar
-                    loaded_friends = loaded_friends - deleted_katilimci_id
                     
+                    loaded_friends = katilimcilar
+                    if katilimcilar:
+                        print(f"New katilimci: {new_katilimci_id}")
+                    print(f"katilimcilar: {katilimcilar}")
+                    print(f"Deleted katilimci: {deleted_katilimci_id}")
+                    print(f"Loaded friends: {loaded_friends}")
                     if deleted_katilimci_id or new_katilimci:
                         self.friend_update.emit(new_katilimci, list(deleted_katilimci_id))
 

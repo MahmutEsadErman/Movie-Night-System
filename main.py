@@ -17,9 +17,9 @@ class MainWindow(QMainWindow):
 
         try:
             self.db_connection = psycopg2.connect(
-                dbname="movnie",
+                dbname="movienight",
                 user="postgres",
-                password="halil123",
+                password="yasir.2121",
                 host="localhost",
                 port="5432"
             )
@@ -66,7 +66,6 @@ class MainWindow(QMainWindow):
         self.data_thread.film_load.connect(self.roomPage.load_film_for_event)
         self.data_thread.film_update.connect(self.roomPage.update_films)
         self.data_thread.info_dialog.connect(self.info_dialog)
-        self.data_thread.exit_room.connect(self.roomPage.exit)
 
         self.data_thread.friend_update.connect(self.roomPage.update_friends)
     def goto_page(self, window):

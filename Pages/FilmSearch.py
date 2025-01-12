@@ -114,8 +114,7 @@ class FilmSearch(QDialog):
     def initialize_films(self):
 
         query = """
-            SELECT f_id, f_adi, f_resim, fragman_url 
-            FROM filmler
+            SELECT * FROM film_view
         """
 
         try:

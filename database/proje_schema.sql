@@ -96,23 +96,32 @@ EXECUTE FUNCTION prevent_extra_films();
 CREATE OR REPLACE FUNCTION kurucu_silimi()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF EXISTS (SELECT 1 FROM etkinlik WHERE kurucu_id = OLD.k_idnum AND e_id = OLD.e_idnum) THEN
-      DELETE FROM katilimci WHERE e_idnum = OLD.e_idnum;
-		  DELETE FROM davetliler WHERE e_idnum = OLD.e_idnum;
-      DELETE FROM etkinlik WHERE e_id = OLD.e_idnum AND kurucu_id = OLD.k_idnum;
-    END IF;
-    RAISE NOTICE 'Katılımcı silindi';
+    
+	-- Actual logic of your deletion
+	IF EXISTS (SELECT 1 FROM etkinlik WHERE kurucu_id = OLD.k_idnum AND e_id = OLD.e_idnum) THEN
+		DELETE FROM katilimci WHERE e_idnum = OLD.e_idnum;
+		DELETE FROM davetliler WHERE e_idnum = OLD.e_idnum;
+		DELETE FROM etkinlik WHERE e_id = OLD.e_idnum AND kurucu_id = OLD.k_idnum;
+
+		RAISE NOTICE 'Kurucu odayı kapattı!';
+	   
+	END IF;
+	
+	RAISE NOTICE 'Katılımcı silindi';
+	
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
+
 CREATE OR REPLACE TRIGGER kurucu_exit
 AFTER DELETE ON katilimci
 FOR EACH ROW
+WHEN (pg_trigger_depth() < 1)
 EXECUTE FUNCTION kurucu_silimi();
 
 
-CREATE OR REPLACE VIEW kullanici_view AS
-SELECT email, sifre_hash, k_id
-FROM kullanici;
+CREATE OR REPLACE VIEW film_view AS
+SELECT f_id, f_adi, f_resim, fragman_url 
+FROM filmler;
 

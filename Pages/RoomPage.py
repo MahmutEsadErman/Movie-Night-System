@@ -34,8 +34,7 @@ class RoomPage(QMainWindow):
         self.db_connection = db_connection
         self.kullanici_id = kullanici_id
         self.event_id = event_id
-        self.film_widgets = {}
-        self.friends_widgets = {}
+        
         # Load the ui file
         if __name__ == "__main__":
             ui_file_name = "../uifolder/Room.ui"
@@ -63,9 +62,10 @@ class RoomPage(QMainWindow):
         # Dictionaries
         self.films = {}
         self.films_no = 0
+        self.film_widgets = {}
         self.friends = {}
         self.friends_no = 0
-
+        self.friends_widgets = {}
         # Set Container stylesheet
         with open("uifolder/film_box.qss", "r") as stylesheet:
             self.containerStyleSheet = stylesheet.read()
@@ -96,10 +96,11 @@ class RoomPage(QMainWindow):
 
                 if self.db_connection.notices:
                     for notice in self.db_connection.notices:
-                        print("NOTICE:", notice)  # Veritabanından gelen noticeleri yazdır DÜZENLENMELİ
+                        QMessageBox.information(self, "Trigger", notice)
 
                 self.db_connection.commit()
                 # Film seçildiğinde, veritabanına kaydediyoruz
+                self.db_connection.notices.clear()
 
 
             except Exception as e:
@@ -132,30 +133,42 @@ class RoomPage(QMainWindow):
             """
             cursor.execute(delete_participant_query, (self.kullanici_id, self.event_id))
 
+            self.parent.goto_page(self.parent.mainmenu)
             if self.db_connection.notices:
-                for notice in self.db_connection.notices:
-                    print("NOTICE:", notice)  # Veritabanından gelen noticeleri yazdır DÜZENLENMELİ
+                notice = self.db_connection.notices[0]
+                QMessageBox.information(self, "Trigger", notice)
+                    
 
             self.db_connection.commit()
-
+            self.db_connection.notices.clear()
         except Exception as e:
             self.db_connection.rollback()
             QMessageBox.critical(self, "Hata", f"Veritabani hatasi: {e}")
-
+            self.parent.goto_page(self.parent.mainmenu)
         finally:
             cursor.close()
 
-        self.clear_films()
+        self.clear()
 
-        # Ana menüye dön
-        self.parent.goto_page(self.parent.mainmenu)
+        
+        
 
-    def clear_films(self):
+    def clear(self):
         # self.filmsWidget'teki tüm widget'ları temizle
         for i in reversed(range(self.filmsWidget.layout().count())):
             widget = self.filmsWidget.layout().itemAt(i).widget()
             if widget is not None:
                 widget.deleteLater()  # Widget'ı kaldır
+        for i in reversed(range(self.friendsWidget.layout().count())):
+            widget = self.friendsWidget.layout().itemAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()
+        self.films = {}
+        self.films_no = 0
+        self.film_widgets = {}
+        self.friends = {}
+        self.friends_no = 0
+        self.friends_widgets = {}
 
         # Film listelerini sıfırla
         self.films.clear()
@@ -213,7 +226,7 @@ class RoomPage(QMainWindow):
             self.column = 0
             self.row += 1
 
-    def add_friend(self, image, name):
+    def add_friend(self, image, name,id):
         # Create a new target
         self.friends[self.friends_no] = {"image": image, "name": name}
 
@@ -222,19 +235,20 @@ class RoomPage(QMainWindow):
 
         # Add the container widget to the grid layout
         self.friendsWidget.layout().addWidget(friend_box, 0, self.friends_no)
-        self.friends_widgets[self.friends_no] = friend_box
+        self.friends_widgets[id] = (friend_box,self.friends_no)
         self.friends_no += 1
 
     def delete_friend(self, friend_id):
-        if friend_id in self.friends:
+        if friend_id in self.friends_widgets:
             # Get the friend widget from the friends dictionary
-            friend_widget = self.friends_widgets[friend_id]
+            friend_widget = self.friends_widgets[friend_id][0]
             
             self.friendsWidget.layout().removeWidget(friend_widget)
             friend_widget.deleteLater()
-      
-            del self.friends[friend_id]
-            
+            friend_no = self.friends_widgets[friend_id][1]
+
+            del self.friends[friend_no]
+            del self.friends_widgets[friend_id]
             self.rearrange_widgets()
 
     def rearrange_widgets(self):
@@ -244,8 +258,8 @@ class RoomPage(QMainWindow):
             self.friendsWidget.layout().addWidget(friend_widget, 0, i)
 
     def update_friends(self, new_friends, deleted_friends):
-        for name in new_friends:
-            self.add_friend(QImage("database/images/dot.jpg"), name)
+        for name,id in new_friends:
+            self.add_friend(QImage("database/images/dot.jpg"), name,id)
         for friend_id in deleted_friends:
             self.delete_friend(friend_id)
 
