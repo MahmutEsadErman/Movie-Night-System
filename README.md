@@ -1,6 +1,6 @@
 <h1 align="center" id="title">Movie Night System</h1>
 
-<p align="center"><img src="https://socialify.git.ci/MahmutEsadErman/Movie-Night-System/image?language=1&amp;owner=1&amp;name=1&amp;stargazers=1&amp;theme=Light" alt="project-image" width="640" height="480/"></p>
+<p align="center"><img src="https://socialify.git.ci/MahmutEsadErman/Movie-Night-System/image?font=Inter&language=1&name=1&pattern=Transparent&stargazers=1&theme=Auto" alt="project-image" width="640" height="480/"></p>
 
 <p id="description">A basic Movie Night application which you can organise a movie night event with your friends. Main purpose of this project is to practise database and application development skills.</p>
 
